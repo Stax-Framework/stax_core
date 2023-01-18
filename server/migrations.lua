@@ -60,7 +60,7 @@ local queries = {
   }
 }
 
-AddEventHandler("DZ::Server::Core::CreateDatabaseTables", function(resource --[[ string ]], callback --[[ function ]])
+AddEventHandler("STAX::Core::Server::CreateDatabaseTables", function(resource --[[ string ]], callback --[[ function ]])
   if resource ~= GetCurrentResourceName() then return end
   callback(queries)
 end)

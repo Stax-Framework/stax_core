@@ -1,14 +1,14 @@
-DZThread = {}
-DZThread.__index = DZThread
+StaxThread = {}
+StaxThread.__index = StaxThread
 
-function DZThread.New(handler --[[ function ]], looped --[[ boolean ]], ms --[[ number ]])
+function StaxThread.New(handler --[[ function ]], looped --[[ boolean ]], ms --[[ number ]])
   if type(handle) ~= "function" then return end
   if type(looped) ~= "boolean" then looped = false end
   if type(ms) ~= "number" then ms = 0 end
 
   local thread = { state = "running" }
   
-  setmetatable(thread, DZThread)
+  setmetatable(thread, StaxThread)
 
   Citizen.CreateThread(function()
     if looped then
@@ -26,21 +26,21 @@ function DZThread.New(handler --[[ function ]], looped --[[ boolean ]], ms --[[ 
   return thread
 end
 
-function DZThread:Pause()
+function StaxThread:Pause()
   if self.state == "destroyed" then return end
   self.state = "paused"
 end
 
-function DZThread:Resume()
+function StaxThread:Resume()
   if self.state == "destroyed" then return end
   self.state = "running"
 end
 
-function DZThread:Destroy()
+function StaxThread:Destroy()
   if self.state == "destroyed" then return end
   self.state = "destroyed"
 end
 
-function DZThread:Status()
+function StaxThread:Status()
   return self.state
 end

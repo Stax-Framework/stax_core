@@ -8,28 +8,28 @@ local secondsCalcs = {
   second = 1
 }
 
-DZDateTime = {}
-DZDateTime.__index = DZDateTime
+StaxDateTime = {}
+StaxDateTime.__index = StaxDateTime
 
-function DZDateTime.New(number)
+function StaxDateTime.New(number)
   local newDateTime = {}
-  setmetatable(newDateTime, DZDateTime)
+  setmetatable(newDateTime, StaxDateTime)
 
   newDateTime.time = os.date("*t", number)
 
   return newDateTime
 end
 
-function DZDateTime.Now()
+function StaxDateTime.Now()
   local newDateTime = {}
-  setmetatable(newDateTime, DZDateTime)
+  setmetatable(newDateTime, StaxDateTime)
 
   newDateTime.time = os.date("*t")
 
   return newDateTime
 end
 
-function DZDateTime:Add(timeObject, setTime)
+function StaxDateTime:Add(timeObject, setTime)
   local seconds = 0
 
   if timeObject then
@@ -52,7 +52,7 @@ function DZDateTime:Add(timeObject, setTime)
   return newTime
 end
 
-function DZDateTime:Subtract(timeObject, setTime)
+function StaxDateTime:Subtract(timeObject, setTime)
   local seconds = 0
 
   if timeObject then
@@ -75,13 +75,13 @@ function DZDateTime:Subtract(timeObject, setTime)
   return newTime
 end
 
-function DZDateTime:Compare(dateTime)
+function StaxDateTime:Compare(dateTime)
   local time1 = os.time(self.time)
   local time2 = os.time(dateTime.time)
   local difference = os.difftime(time1, time2)
   return difference
 end
 
-function DZDateTime:GetOSTime()
+function StaxDateTime:GetOSTime()
   return os.time(self.time)
 end

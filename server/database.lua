@@ -9,7 +9,7 @@ end)
 
 function StartQueryProcess()
   print("Starting Database Migrations For [" .. resources[1] .. "]!")
-  TriggerEvent("DZ::Server::Core::CreateDatabaseTables", resources[1], function(queries)
+  TriggerEvent("STAX::Core::Server::CreateDatabaseTables", resources[1], function(queries)
     for a = 1, #queries do
       if queries[a].table then
         print("Inserting Query Table")
@@ -43,7 +43,7 @@ function StartQueryProcess()
     if #resources > 0 then
       StartQueryProcess()
     else
-      DZServerManager:SetReadyState("DatabaseReady", true)
+      StaxServerManager:SetReadyState("DatabaseReady", true)
     end
   end)
 end
