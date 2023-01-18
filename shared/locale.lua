@@ -1,0 +1,1 @@
+CoreLocale = exports.stax_locales:GetLocale("core")

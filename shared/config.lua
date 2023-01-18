@@ -1,0 +1,1 @@
+CoreConfig = exports.stax_configs:GetConfig("core")
