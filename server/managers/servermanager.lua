@@ -1,4 +1,4 @@
-StaxServerManager = {}StaxServerManager
+StaxServerManager = {}
 StaxServerManager.ReadyStates = {
   DatabaseReady = false
 }
@@ -28,13 +28,20 @@ function StaxServerManager:ServerReady()
   return true
 end
 
--- EXPORTS
-exports("ServerManager_SetReadyState", function(key --[[ string ]], ready --[[ boolean ]])
+-- EXPORT FUNCTIONS
+local function SetReadyState(key --[[ string ]], ready --[[ boolean ]])
   StaxServerManager:SetReadyState(key, ready)
-end)
-exports("ServerManager_GetReadyState", function(key --[[ string ]])
+end
+
+local function GetReadyState(key --[[ string ]])
   return StaxServerManager:GetReadyState(key)
-end)
-exports("ServerManager_ServerReady", function()
+end
+
+local function ServerReady()
   return StaxServerManager:ServerReady()
-end)
+end
+
+-- EXPORTS
+exports("ServerManager_SetReadyState", SetReadyState)
+exports("ServerManager_GetReadyState", GetReadyState)
+exports("ServerManager_ServerReady", ServerReady)
