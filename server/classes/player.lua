@@ -40,6 +40,12 @@ function StaxPlayer:GetIdentifiers()
 end
 
 function StaxPlayer:GetIdentifier(identType --[[ string ]])
+  local fxdk = GetConvarInt("sv_fxdkMode", false)
+
+  if (fxdk) then
+    return "license:00000000"
+  end
+
   for a = 1, #self.Identifiers do
     if string.find(self.Identifiers[a], identType, 1) then
       return self.Identifiers[a]
