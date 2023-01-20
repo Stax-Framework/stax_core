@@ -1,6 +1,6 @@
 
 -- FUNCTIONS
-function CopyTable(t --[[ table ]])
+local function CopyTable(t --[[ table ]])
   local newTable = {}
 
   for k, v in pairs(t) do

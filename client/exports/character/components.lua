@@ -14,11 +14,11 @@ Components["badges"] = 10
 Components["torso_2"] = 11
 
 -- FUNCTIONS
-function GetComponents()
+local function GetComponents()
   return Components
 end
 
-function GetComponent(component --[[ string ]])
+local function GetComponent(component --[[ string ]])
   return Components[component]
 end
 

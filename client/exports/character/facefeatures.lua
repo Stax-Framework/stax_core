@@ -22,11 +22,11 @@ FaceFeatures["chin_hole"] = 18
 FaceFeatures["neck_thickness"] = 19
 
 -- FUNCTIONS
-function GetFaceFeatures()
+local function GetFaceFeatures()
   return FaceFeatures
 end
 
-function GetFaceFeature(feature --[[ string ]])
+local function GetFaceFeature(feature --[[ string ]])
   return FaceFeatures[feature]
 end
 

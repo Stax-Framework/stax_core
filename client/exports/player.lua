@@ -1,5 +1,5 @@
 -- FUNCTIONS
-function SetPlayerPedModel(model --[[ string || hash ]])
+local function SetPlayerPedModel(model --[[ string || hash ]])
   local p = promise.new()
   local timeout = GetGameTimer() + 15000
 

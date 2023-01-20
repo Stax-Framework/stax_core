@@ -7,11 +7,11 @@ Props["watches"] = 6
 Props["bracelets"] = 7
 
 -- FUNCTIONS
-function GetProps()
+local function GetProps()
   return Props
 end
 
-function GetProp(prop --[[ string ]])
+local function GetProp(prop --[[ string ]])
   return Props[prop]
 end
 

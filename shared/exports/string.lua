@@ -5,14 +5,14 @@ local characterSets = {
 }
 
 -- FUNCTIONS
-function StringInterpolate(str --[[ string ]], data --[[ table ]])
+local function StringInterpolate(str --[[ string ]], data --[[ table ]])
   for k, v in pairs(data) do
     str = string.gsub(str, "{" .. k .. "}", v)
   end
   return str
 end
 
-function StringSplit(str --[[ string ]], sep --[[ string ]])
+local function StringSplit(str --[[ string ]], sep --[[ string ]])
   local result = {}
   if sep == nil then sep = "%s" end
   for match in string.match(str, "([^" .. sep .. "]+)") do
@@ -21,11 +21,11 @@ function StringSplit(str --[[ string ]], sep --[[ string ]])
   return result
 end
 
-function FormatIndex(index --[[ string ]])
+local function FormatIndex(index --[[ string ]])
   return string.lower(index):gsub(" ", "_")
 end
 
-function RandomString(iterations --[[ number ]])
+local function RandomString(iterations --[[ number ]])
   math.randomseed(GetGameTimer())
   local str = {}
 
@@ -36,7 +36,7 @@ function RandomString(iterations --[[ number ]])
   return table.concat(str, "")
 end
 
-function StripInvalidCharacters(str --[[ string ]])
+local function StripInvalidCharacters(str --[[ string ]])
   return str:gsub("%W", "")
 end
 

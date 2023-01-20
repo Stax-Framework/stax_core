@@ -1,4 +1,4 @@
-function LoadFile(directory --[[ string ]], file --[[ string ]])
+local function LoadFile(directory --[[ string ]], file --[[ string ]])
   local f = io.open(directory .. file, "r")
   local fData = f:read("*a")
   f:close()

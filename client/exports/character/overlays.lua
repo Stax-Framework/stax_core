@@ -15,11 +15,11 @@ Overlays["body_blemishes"] = 11
 Overlays["add_body_blemishes"] = 12
 
 -- FUNCTIONS
-function GetOverlays()
+local function GetOverlays()
   return Overlays
 end
 
-function GetOverlay(overlay --[[ string ]])
+local function GetOverlay(overlay --[[ string ]])
   return Overlays[overlay]
 end
 
