@@ -1,7 +1,7 @@
 {
   "identifier": "license",
   "locale": "en",
-  "EnableAI": true,
-  "DebugEnabled": false,
-  "DefaultRole": "user"
+  "enable_ai": true,
+  "debug_disabled": true,
+  "default_role": "user"
 }
