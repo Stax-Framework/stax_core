@@ -48,7 +48,7 @@ end
 
 --- Fires after the plugin has been mounted
 function StaxPlugin:Mounted()
-  -- self:LoadLocale()
+  self:LoadLocale()
 end
 
 --- Get plugin name
