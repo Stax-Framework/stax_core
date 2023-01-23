@@ -48,7 +48,7 @@ end
 
 --- Fires after the plugin has been mounted
 function StaxPlugin:Mounted()
-  self:LoadLocale()
+  -- self:LoadLocale()
 end
 
 --- Get plugin name
@@ -86,10 +86,9 @@ end
 function StaxPlugin:Migrate()
   exports.stax_core:Logger_LogSuccess("Starting Migrations", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 
-  local pluginDirectory = GetResourcePath(self.ResourceName)
-  local sqlPath = "/sql/"
+  local pluginDirectory = GetResourcePath(self.ResourceName) .. "/sql/"
 
-  local files = exports.stax_core:Directory_Scan(pluginDirectory .. sqlPath)
+  local files = exports.stax_core:Directory_Scan(pluginDirectory)
 
   if #files < 1 then
     exports.stax_core:Logger_LogError("Didn't find any sql files", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
@@ -97,7 +96,7 @@ function StaxPlugin:Migrate()
   end
 
   for a = 1, #files do
-    local sql = LoadResourceFile(self.ResourceName, sqlPath .. files[a])
+    local sql = LoadResourceFile(self.ResourceName, "/sql/" .. files[a])
     
     exports.stax_core:Logger_LogSuccess("Executing Query", "[(" .. self.ResourceName .. ") " .. self.Name .. "] :: " .. files[a])
     
@@ -119,15 +118,25 @@ end
 
 --- Loads the plugins config
 function StaxPlugin:LoadConfig()
-  local config = LoadResourceFile(self.ResourceName, "config.json")
+  local pluginDirectory = GetResourcePath(self.ResourceName) .. "/configs/"
 
-  if not config then
-    exports.stax_core:Logger_LogError("Couldn't load plugin config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
-    return
+  local files = exports.stax_core:Directory_Scan(pluginDirectory)
+
+  if #files < 1 then
+    exports.stax_core:Logger_LogError("Didn't find any config files", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+    return false
   end
 
-  self.Config = json.decode(config)
+  local config = {}
 
+  for a = 1, #files do
+    local cfg = LoadResourceFile(self.ResourceName, "/configs/" .. files[a])
+
+    config[files[a]:gsub(".json", "")] = json.decode(cfg)
+  end
+
+
+  self.Config = config
   exports.stax_core:Logger_LogSuccess("Loaded Config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 end
 
