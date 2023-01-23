@@ -4,7 +4,7 @@ fx_version 'cerulean'
 
 game 'gta5'
 
-description 'DeadZone Core'
+description 'STAX Core'
 
 version '1.0.0'
 
@@ -28,11 +28,20 @@ server_scripts {
   "server/baseevents.lua",
   "server/exports/*.lua",
   "server/classes/player.lua",
+  "server/classes/plugin.lua",
   "server/managers/playermanager.lua",
   "server/managers/servermanager.lua",
+  "server/managers/pluginmanager.lua",
   "server/migrations.lua",
-  "server/database.lua",
   "server/server.lua"
 }
 
 lua54 'yes'
+
+--[[ STAX METADATA ]]--
+stax_plugin "stax-core" {
+  name = "Stax Core",
+  description = "Stax Framework Core"
+}
+
+stax_migrations "/sql/"

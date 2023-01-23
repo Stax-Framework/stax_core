@@ -1,15 +1,15 @@
-AddEventHandler("DZ::Server::Core::PlayerConnecting", function(player --[[ DZPlayer ]], deferrals --[[ table ]])
-  player = DZPlayer.Class(player)
+---@param player StaxPlayer
+---@param deferrals table
+AddEventHandler("STAX::Core::Server::PlayerConnecting", function(player, deferrals)
+  player = StaxPlayer.Class(player)
 
   deferrals.defer()
   deferrals.update(CoreLocale["connecting_retrieving_user_data"])
 
-  if not DZServerManager:ServerReady() then
+  if not StaxServerManager:ServerReady() then
     deferrals.done(CoreLocale["connecting_server_not_ready"])
     return
   end
-
-  local ServerWhitelisted = CoreConfig.Whitelisted
 
   -- Load Player User
   deferrals.update(CoreLocale["connecting_retrieving_user_data"])
@@ -20,7 +20,7 @@ AddEventHandler("DZ::Server::Core::PlayerConnecting", function(player --[[ DZPla
     player:CreateUser()
     deferrals.update(CoreLocale["connecting_created_user"])
 
-    if ServerWhitelisted then
+    if not CoreConfig.DisableAllowlist then
       deferrals.done(CoreLocale["connecting_not_whitelisted"])
       return
     end
@@ -29,8 +29,8 @@ AddEventHandler("DZ::Server::Core::PlayerConnecting", function(player --[[ DZPla
   else
     deferrals.update(CoreLocale["connecting_welcome_back"])
 
-    if ServerWhitelisted then
-      if not player:IsWhitelisted() then
+    if not CoreConfig.DisableAllowlist then
+      if not player:IsAllowListed() then
         deferrals.done(CoreLocale["connecting_not_whitelisted"])
         return
       end
@@ -51,18 +51,17 @@ AddEventHandler("DZ::Server::Core::PlayerConnecting", function(player --[[ DZPla
   end
 end)
 
-AddEventHandler("DZ::Server::Core::PlayerJoining", function(source --[[ number ]], oldSource --[[ number ]], player --[[ DZPlayer ]])
-  DZPlayerManager:AddPlayer(player)
+AddEventHandler("STAX::Core::Server::PlayerJoining", function(source --[[ number ]], oldSource --[[ number ]], player --[[ StaxPlayer ]])
+  StaxPlayerManager:AddPlayer(player)
 end)
 
-AddEventHandler("DZ::Server::Core::OnResourceStart", function(resource --[[ string ]])
+AddEventHandler("STAX::Core::Server::OnResourceStart", function(resource --[[ string ]])
   if GetCurrentResourceName() ~= resource then return end
-  SetGameType("Custom Zombie Framework")
-  SetMapName("DeadZone")
+  SetGameType("Stax Server Framework")
+  SetMapName("STAX")
 end)
 
-AddEventHandler("DZ::Server::Core::PlayerDropped", function(player --[[ DZPlayer ]], reason --[[ string ]])
-  local src = source
-  DZPlayerManager:RemovePlayer(src)
-  TriggerEvent("DZ::Server::Core::PlayerLeft", player)
+AddEventHandler("STAX::Core::Server::PlayerDropped", function(player --[[ StaxPlayer ]], reason --[[ string ]])
+  StaxPlayerManager:RemovePlayer(player.Handle)
+  TriggerEvent("STAX::Core::Server::PlayerLeft", player)
 end)

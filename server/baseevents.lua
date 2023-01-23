@@ -1,6 +1,6 @@
 AddEventHandler("playerDropped", function(reason --[[ string ]])
   local src = source
-  local player = DZPlayerManager:GetPlayer(src)
+  local player = StaxPlayerManager:GetPlayer(src)
   TriggerEvent("STAX::Core::Server::PlayerDropped", player, reason)
 end)
 
@@ -42,25 +42,25 @@ end)
 
 AddEventHandler("playerConnecting", function(playerName --[[ string ]], setKickReason --[[ function ]], deferrals --[[ table ]])
   local src = source
-  local player = DZPlayer.New(src)
+  local player = StaxPlayer.New(src)
   TriggerEvent("STAX::Core::Server::PlayerConnecting", player, deferrals)
 end)
 
 AddEventHandler("playerJoining", function(source --[[ number ]], oldSource --[[ number ]])
   local src = source
-  local player = DZPlayer.New(src)
+  local player = StaxPlayer.New(src)
   TriggerEvent("STAX::Core::Server::PlayerJoining", src, oldSource, player)
 end)
 
 AddEventHandler("playerEnteredScope", function(scope --[[ table ]])
   local src = source
-  local player = DZPlayerManager:GetPlayer(src)
+  local player = StaxPlayerManager:GetPlayer(src)
   TriggerEvent("STAX::Core::Server::PlayerEnteredScope", player, scope)
 end)
 
 AddEventHandler("playerLeftScope", function(scope --[[ table ]])
   local src = source
-  local player = DZPlayerManager:GetPlayer(src)
+  local player = StaxPlayerManager:GetPlayer(src)
   TriggerEvent("STAX::Core::Server::PlayerLeftScope", player, scope)
 end)
 

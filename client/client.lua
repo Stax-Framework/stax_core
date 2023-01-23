@@ -11,7 +11,7 @@ Citizen.CreateThread(function()
 
     SetPlayerHealthRechargeLimit(player, 0.0)
 
-    if CoreConfig.DisableAI then
+    if not CoreConfig.EnableAI then
       DisableAI()
     end
 
@@ -34,7 +34,7 @@ function FirstSpawn()
     exports.spawnmanager:spawnPlayer()
     exports.spawnmanager:setAutoSpawn(false)
 
-    TriggerServerEvent("DZ::Core::Server::PlayerFirstSpawned")
+    TriggerServerEvent("STAX::Core::Server::PlayerFirstSpawned")
     firstSpawn = false
   end
 end
@@ -57,18 +57,4 @@ function DisableWantedLevel(player --[[ number ]])
     SetPlayerWantedLevel(player, 0, false)
     SetPlayerWantedLevelNow(player, false)
   end
-end
-
-if CoreConfig.DebugEnabled then
-  RegisterCommand("kill", function(source, args, raw)
-    SetEntityHealth(PlayerPedId(), 0.0)
-  end, false)
-
-  RegisterCommand("respawn", function(source, args, raw)
-    exports.spawnmanager:spawnPlayer()
-  end, false)
-
-  RegisterCommand("revive", function(source, args, raw)
-    SetEntityHealth(PlayerPedId(), GetEntityMaxHealth(PlayerPedId()))
-  end, false)
 end

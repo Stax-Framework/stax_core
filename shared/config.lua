@@ -1,8 +1,8 @@
 CoreConfig = exports.stax_configs:AddConfig("core", {
     Identifier = "license",
     Locale = "en",
-    Whitelisted = false,
-    DisableAI = false,
+    DisableAllowlist = false,
+    EnableAI = false,
     DisableWanted = true,
     EnablePVP = true,
     DebugEnabled = true,

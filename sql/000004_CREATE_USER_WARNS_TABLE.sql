@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS `user_warns` (
+  `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `reason` TEXT DEFAULT NULL,
+  `admin_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  FOREIGN KEY (`admin_id`) REFERENCES users(`id`) ON DELETE RESTRICT,
+  FOREIGN KEY (`user_id`) REFERENCES users(`id`) ON DELETE CASCADE
+);

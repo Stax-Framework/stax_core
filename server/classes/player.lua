@@ -1,10 +1,18 @@
+---@class StaxPlayer
+---@field public Handle number Players server id
+---@field public Name string Players server name
+---@field public Identifiers table<number, string> Table of players available identifiers
+---@field public Data table<string, any>
 StaxPlayer = {}
 StaxPlayer.__index = StaxPlayer
 
-function StaxPlayer.New(handle --[[ number ]])
+--- Creates new instance of StaxPlayer
+---@param handle string
+---@return StaxPlayer
+function StaxPlayer.New(handle)
   local newPlayer = {}
   local playerName = GetPlayerName(handle)
-  local validatedName = exports.dz_core:String_StripInvalidCharacters(playerName)
+  local validatedName = exports.stax_core:String_StripInvalidCharacters(playerName)
 
   setmetatable(newPlayer, StaxPlayer)
 
@@ -16,18 +24,28 @@ function StaxPlayer.New(handle --[[ number ]])
   return newPlayer
 end
 
-function StaxPlayer.Class(data --[[ player ]])
-  return setmetatable(data, StaxPlayer)
+--- Reinitialized instance of StaxPlayer
+---@param player StaxPlayer
+---@return StaxPlayer
+function StaxPlayer.Class(player)
+  return setmetatable(player, StaxPlayer)
 end
 
-function StaxPlayer:SetData(key --[[ string ]], data --[[ any ]])
+--- Stores some data inside of the StaxPlayer instance
+---@param key string
+---@param data any
+function StaxPlayer:SetData(key, data)
   self.Data[key] = data
 end
 
-function StaxPlayer:GetData(key --[[ string ]])
+--- Gets some data stored inside of the StaxPlayer instance
+---@param key string
+---@return any
+function StaxPlayer:GetData(key)
   return self.Data[key]
 end
 
+---@return table<number, string>
 function StaxPlayer:GetIdentifiers()
   local amount = GetNumPlayerIdentifiers(self.Handle)
   local identifiers = {}
@@ -39,13 +57,10 @@ function StaxPlayer:GetIdentifiers()
   return identifiers
 end
 
-function StaxPlayer:GetIdentifier(identType --[[ string ]])
-  local fxdk = GetConvarInt("sv_fxdkMode", false)
-
-  if (fxdk) then
-    return "license:00000000"
-  end
-
+--- Gets a specified type of player identifier if it exists
+---@param identType string
+---@return string | nil
+function StaxPlayer:GetIdentifier(identType)
   for a = 1, #self.Identifiers do
     if string.find(self.Identifiers[a], identType, 1) then
       return self.Identifiers[a]
@@ -54,18 +69,22 @@ function StaxPlayer:GetIdentifier(identType --[[ string ]])
   return nil
 end
 
-function StaxPlayer:IsWhitelisted()
+--- Gets if the player is allowed to join the server while its private
+---@return boolean
+function StaxPlayer:IsAllowListed()
   local UserData = self:GetData("User")
 
   if not UserData then return false end
 
-  if UserData.whitelisted == 1 then
+  if UserData.allowlisted == 1 then
     return true
   end
 
   return false
 end
 
+--- Returns if the player is banned from the server
+---@return boolean
 function StaxPlayer:IsBanned()
   local UserData = self:GetData("User")
   
@@ -82,19 +101,26 @@ function StaxPlayer:IsBanned()
   end
 end
 
-function StaxPlayer:Kick(admin --[[ StaxPlayer ]], reason --[[ string ]])
+--- Kicks the player from the server
+---@param admin StaxPlayer
+---@param reason string
+function StaxPlayer:Kick(admin, reason)
   exports.ExternalSQL.AsyncQuery({
     query = [[ INSERT INTO `user_warns` (`reason`, `admin_id`, `user_id`) VALUES (:reason, :adminid, :userid) ]],
     data = {
       reason = reason,
       adminid = admin.Data.User.id,
-      userid = self.data.User.id
+      userid = self.Data.User.id
     }
   })
   DropPlayer(self.Handle, reason)
 end
 
-function StaxPlayer:Ban(admin --[[ StaxPlayer ]], reason --[[ string ]], time --[[ table ]])
+--- Bans the player from the server
+---@param admin StaxPlayer
+---@param reason string
+---@param time table
+function StaxPlayer:Ban(admin, reason, time)
   local permaBanned = false
 
   if time == nil then
@@ -114,6 +140,8 @@ function StaxPlayer:Ban(admin --[[ StaxPlayer ]], reason --[[ string ]], time --
   DropPlayer(self.Handle, reason)
 end
 
+--- Gets the players user data
+---@return table | nil
 function StaxPlayer:GetUser()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT * FROM `users` WHERE `identifier` = :identifier LIMIT 1 ]],
@@ -129,6 +157,8 @@ function StaxPlayer:GetUser()
   return nil
 end
 
+--- Gets all of the warnings the player has received
+---@return table
 function StaxPlayer:GetWarnings()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT * FROM `user_warns` WHERE `user_id` = :id ]],
@@ -144,6 +174,8 @@ function StaxPlayer:GetWarnings()
   return {}
 end
 
+--- Gets the amount of warnings the player has received
+---@return number
 function StaxPlayer:GetWarningsCount()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT COUNT(*) FROM `user_warns` WHERE `user_id` = :id ]],
@@ -159,6 +191,8 @@ function StaxPlayer:GetWarningsCount()
   return 0
 end
 
+--- Gets all of the bans the player has received
+---@return table
 function StaxPlayer:GetBans()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT * FROM `user_bans` WHERE `user_id` = :id ]],
@@ -174,6 +208,8 @@ function StaxPlayer:GetBans()
   return {}
 end
 
+--- Gets the amount of bans the player has received
+---@return number
 function StaxPlayer:GetBansCount()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT COUNT(*) FROM `user_bans` WHERE `user_id` = :id ]],
@@ -189,6 +225,8 @@ function StaxPlayer:GetBansCount()
   return 0
 end
 
+--- Gets all of the kicks the player has received
+---@return table
 function StaxPlayer:GetKicks()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT * FROM `user_kicks` WHERE `user_id` = :id ]],
@@ -204,6 +242,8 @@ function StaxPlayer:GetKicks()
   return {}
 end
 
+--- Gets the amount of kicks the player has received
+---@return number
 function StaxPlayer:GetKicksCount()
   local results = exports.ExternalSQL:AsyncQuery({
     query = [[ SELECT COUNT(*) FROM `user_kicks` WHERE `user_id` = :id ]],
@@ -219,6 +259,7 @@ function StaxPlayer:GetKicksCount()
   return 0
 end
 
+--- Creates a new database user for this player
 function StaxPlayer:CreateUser()
   exports.ExternalSQL:AsyncQuery({
     query = [[ INSERT INTO `users` (`name`, `identifier`) VALUES (:name, :identifier) ]],
@@ -229,6 +270,7 @@ function StaxPlayer:CreateUser()
   })
 end
 
+--- Updates the players name
 function StaxPlayer:UpdateName()
   exports.ExternalSQL:AsyncQuery({
     query = [[ UPDATE `users` SET `name` = :name WHERE `identifier` = :identifier ]],
@@ -239,6 +281,7 @@ function StaxPlayer:UpdateName()
   })
 end
 
+--- Updates the players last time played on the server
 function StaxPlayer:UpdateLastPlayed()
   exports.ExternalSQL:AsyncQuery({
     query = [[ UPDATE `users` SET `name` = :name WHERE `identifier` = :identifier ]],
@@ -249,6 +292,9 @@ function StaxPlayer:UpdateLastPlayed()
   })
 end
 
-function StaxPlayer:FireEvent(event --[[ string ]], ...--[[ any ]])
+--- Fires an event on this player
+---@param event string
+---@param ... any
+function StaxPlayer:FireEvent(event, ...)
   TriggerClientEvent(event, self.Handle, ...)
 end
