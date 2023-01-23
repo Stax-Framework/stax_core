@@ -6,7 +6,16 @@ StaxPluginManager.Plugins = {}
 function StaxPluginManager:AddPlugin(resource)
   local newPlugin = StaxPlugin.New(resource);
 
-  self.Plugins[newPlugin.Name] = newPlugin
+  self.Plugins[newPlugin.Key] = newPlugin
+
+  newPlugin:Mounted()
+end
+
+--- Gets the plugin instance from its name
+---@param key string
+---@return StaxPlugin | nil
+function StaxPluginManager:GetPlugin(key)
+  return self.Plugins[key]
 end
 
 --- Hooks into the resource start base event

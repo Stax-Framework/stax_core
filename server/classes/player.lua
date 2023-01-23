@@ -97,8 +97,11 @@ function StaxPlayer:IsBanned()
 
     if BansData then
       -- Check Through Bans To See If Any Are Active
+      print("Checking Through Bans")
     end
   end
+
+  return false
 end
 
 --- Kicks the player from the server

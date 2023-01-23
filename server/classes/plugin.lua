@@ -3,6 +3,7 @@
 ---@field public Key string Plugin defined key
 ---@field public Name string Plugin defined name
 ---@field public Description string Plugin define description
+---@field public Config table Plugin configurations
 StaxPlugin = {}
 StaxPlugin.__index = StaxPlugin
 
@@ -17,6 +18,7 @@ function StaxPlugin.New(resource)
   newPlugin.Key = nil
   newPlugin.Name = nil
   newPlugin.Description = nil
+  newPlugin.Config = nil
 
   newPlugin:Init()
 
@@ -31,7 +33,13 @@ function StaxPlugin:Init()
     return
   end
 
+  self:LoadConfig()
   self:StartMigrations()
+end
+
+--- Fires after the plugin has been mounted
+function StaxPlugin:Mounted()
+  self:LoadLocale()
 end
 
 --- Get plugin name
@@ -115,6 +123,40 @@ function StaxPlugin:Migrate()
   exports.stax_core:Logger_LogSuccess("Migration Complete", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 
   return true
+end
+
+--- Loads the plugins config
+function StaxPlugin:LoadConfig()
+  local config = LoadResourceFile(self.ResourceName, "config.json")
+
+  if not config then
+    exports.stax_core:Logger_LogError("Couldn't load plugin config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+    return
+  end
+
+  self.Config = json.decode(config)
+
+  exports.stax_core:Logger_LogSuccess("Loaded Config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+end
+
+function StaxPlugin:LoadLocale()
+  local corePlugin = StaxPluginManager:GetPlugin("stax-core")
+
+  if not corePlugin then
+    exports.stax_core:Logger_LogError("Couldn't get core plugin", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+    return
+  end
+
+  local lang = corePlugin.Config.locale
+
+  if not lang then
+    exports.stax_core:Logger_LogError("Couldn't get language from core config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+    return
+  end
+
+  local locale = LoadResourceFile(self.ResourceName, "/locales/" .. lang .. ".json")
+
+  print(locale)
 end
 
 --- Checks if the plugin has metadata key
