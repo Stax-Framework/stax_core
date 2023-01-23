@@ -149,7 +149,8 @@ function StaxPlugin:LoadLocale()
     return
   end
 
-  local lang = corePlugin.Config.locale
+  --- REMOVE THIS ONCE YOU ADD CONFIG GETTER METHODS
+  local lang = corePlugin.Config["server"].locale
 
   if not lang then
     exports.stax_core:Logger_LogError("Couldn't get language from core config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
