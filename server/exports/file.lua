@@ -2,7 +2,7 @@
 ---@param directory string
 ---@param file string
 ---@return string | nil
-local function LoadFile(directory --[[ string ]], file --[[ string ]])
+local function LoadFile(directory, file)
   local f = io.open(directory .. file, "r")
   if not f then return nil end
 

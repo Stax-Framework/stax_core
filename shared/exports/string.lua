@@ -5,14 +5,23 @@ local characterSets = {
 }
 
 -- FUNCTIONS
-local function StringInterpolate(str --[[ string ]], data --[[ table ]])
+
+--- Interpolates and concatenate's data into a string
+---@param str string
+---@param data table
+---@return string
+local function StringInterpolate(str, data)
   for k, v in pairs(data) do
     str = string.gsub(str, "{" .. k .. "}", v)
   end
   return str
 end
 
-local function StringSplit(str --[[ string ]], sep --[[ string ]])
+--- Splits string into a table based on a seperator
+---@param str string
+---@param sep string
+---@return table
+local function StringSplit(str, sep)
   local result = {}
   if sep == nil then sep = "%s" end
   for match in string.match(str, "([^" .. sep .. "]+)") do
@@ -21,11 +30,18 @@ local function StringSplit(str --[[ string ]], sep --[[ string ]])
   return result
 end
 
-local function FormatIndex(index --[[ string ]])
-  return string.lower(index):gsub(" ", "_")
+--- Formats a string into an index value
+---@param str string
+---@return string
+local function FormatIndex(str)
+  local index = string.lower(index):gsub(" ", "_")
+  return index
 end
 
-local function RandomString(iterations --[[ number ]])
+--- Generates a random string at a specific length
+---@param iterations number
+---@return string
+local function RandomString(iterations)
   math.randomseed(GetGameTimer())
   local str = {}
 
@@ -36,8 +52,12 @@ local function RandomString(iterations --[[ number ]])
   return table.concat(str, "")
 end
 
-local function StripInvalidCharacters(str --[[ string ]])
-  return str:gsub("%W", "")
+--- Strips string of invalid character
+---@param str string
+---@return string
+local function StripInvalidCharacters(str)
+  local strippedString = str:gsub("%W", "")
+  return strippedString
 end
 
 -- EXPORTS

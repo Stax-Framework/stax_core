@@ -4,12 +4,14 @@
 ---@field public Name string Plugin defined name
 ---@field public Description string Plugin define description
 ---@field public Config table Plugin configurations
+---@field public Locale table Plugin localization
 StaxPlugin = {}
 StaxPlugin.__index = StaxPlugin
 
 --- Create new instance of StaxPlugin
 ---@param resource string
 ---@return StaxPlugin
+---@return boolean
 function StaxPlugin.New(resource)
   local newPlugin = {}
   setmetatable(newPlugin, StaxPlugin)
@@ -19,10 +21,17 @@ function StaxPlugin.New(resource)
   newPlugin.Name = nil
   newPlugin.Description = nil
   newPlugin.Config = nil
+  newPlugin.Locale = nil
 
   newPlugin:Init()
 
-  return newPlugin
+  local validPlugin = false
+
+  if newPlugin.Key then
+    validPlugin = true
+  end
+
+  return newPlugin, validPlugin
 end
 
 --- Initializes the plugins
@@ -65,24 +74,11 @@ end
 
 --- Starts the migration process for the plugin
 function StaxPlugin:StartMigrations()
-  if not self:HasMigrations() then
-    exports.stax_core:Logger_LogWarning("No Migrations", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
-    return
-  end
-
   local completedMigrations = self:Migrate()
 
   if not completedMigrations then
     exports.stax_core:Logger_LogError("Couldn't Complete Migrations", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
   end
-end
-
---- Checks if the plugin has migration metadata set
-function StaxPlugin:HasMigrations()
-  if not self:HasKey("stax_migrations") then
-    return false
-  end
-  return true
 end
 
 --- Gets the migratiosn from the path and executes the plugins
@@ -91,21 +87,17 @@ function StaxPlugin:Migrate()
   exports.stax_core:Logger_LogSuccess("Starting Migrations", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 
   local pluginDirectory = GetResourcePath(self.ResourceName)
-  local sqlPath = self:GetFirstByKey("stax_migrations")
+  local sqlPath = "/sql/"
 
-  if not sqlPath then
-    return false
-  end
-
-  local files = exports.stax_core:Directory_Scan(pluginDirectory .. sqlPath.value)
+  local files = exports.stax_core:Directory_Scan(pluginDirectory .. sqlPath)
 
   if #files < 1 then
-    exports.stax_core:Logger_LogError("Didn't load any sql files", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
+    exports.stax_core:Logger_LogError("Didn't find any sql files", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
     return false
   end
 
   for a = 1, #files do
-    local sql = LoadResourceFile(self.ResourceName, sqlPath.value .. files[a])
+    local sql = LoadResourceFile(self.ResourceName, sqlPath .. files[a])
     
     exports.stax_core:Logger_LogSuccess("Executing Query", "[(" .. self.ResourceName .. ") " .. self.Name .. "] :: " .. files[a])
     
@@ -139,6 +131,7 @@ function StaxPlugin:LoadConfig()
   exports.stax_core:Logger_LogSuccess("Loaded Config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 end
 
+--- Loads the plugins locale language file
 function StaxPlugin:LoadLocale()
   local corePlugin = StaxPluginManager:GetPlugin("stax-core")
 
@@ -156,7 +149,14 @@ function StaxPlugin:LoadLocale()
 
   local locale = LoadResourceFile(self.ResourceName, "/locales/" .. lang .. ".json")
 
-  print(locale)
+  if not locale then
+    exports.stax_core:Logger_LogError("Couldn't get locale file", "[(" .. self.ResourceName .. ") " .. self.Name .. "] :: LANG = " .. lang)
+    return
+  end
+
+  self.Locale = json.decode(locale)
+
+  exports.stax_core:Logger_LogSuccess("Loaded Locale", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 end
 
 --- Checks if the plugin has metadata key

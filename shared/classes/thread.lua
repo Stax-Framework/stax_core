@@ -1,7 +1,13 @@
+---@class StaxThread
+---@field public state string
 StaxThread = {}
 StaxThread.__index = StaxThread
 
-function StaxThread.New(handler --[[ function ]], looped --[[ boolean ]], ms --[[ number ]])
+--- Creates new instance of StaxThread
+---@param handler function
+---@param looped boolean
+---@param ms number
+function StaxThread.New(handler, looped, ms)
   if type(handle) ~= "function" then return end
   if type(looped) ~= "boolean" then looped = false end
   if type(ms) ~= "number" then ms = 0 end
@@ -26,21 +32,26 @@ function StaxThread.New(handler --[[ function ]], looped --[[ boolean ]], ms --[
   return thread
 end
 
+--- Pauses the current instance's thread
 function StaxThread:Pause()
   if self.state == "destroyed" then return end
   self.state = "paused"
 end
 
+--- Resumes the current instance's thread
 function StaxThread:Resume()
   if self.state == "destroyed" then return end
   self.state = "running"
 end
 
+--- Destroys the current instance's thread
 function StaxThread:Destroy()
   if self.state == "destroyed" then return end
   self.state = "destroyed"
 end
 
+--- Gets the current instance's thread status
+---@return string
 function StaxThread:Status()
   return self.state
 end

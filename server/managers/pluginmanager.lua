@@ -4,7 +4,11 @@ StaxPluginManager.Plugins = {}
 --- Creates new plugin instance and stores it
 ---@param resource string
 function StaxPluginManager:AddPlugin(resource)
-  local newPlugin = StaxPlugin.New(resource);
+  local newPlugin, validPlugin = StaxPlugin.New(resource);
+
+  if not validPlugin then
+    return
+  end
 
   self.Plugins[newPlugin.Key] = newPlugin
 

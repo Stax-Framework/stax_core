@@ -12,9 +12,7 @@ author 'Xander1998'
 
 shared_scripts {
   "shared/classes/*.lua",
-  "shared/exports/*.lua",
-  "shared/config.lua",
-  "shared/locale.lua"
+  "shared/exports/*.lua"
 }
 
 client_scripts {
@@ -43,5 +41,3 @@ stax_plugin "stax-core" {
   name = "Stax Core",
   description = "Stax Framework Core"
 }
-
-stax_migrations "/sql/"

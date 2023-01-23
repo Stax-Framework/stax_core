@@ -1,6 +1,12 @@
+---@class StaxCallback
+---@field public Resource string Resource making the callback
+---@field public Callbacks table Callbacks when registered get stored here
+---@field public IsServer boolean If the callback instance is on the client or SetDriverRacingModifier(Ped* driver, float* modifier)
 StaxCallback = {}
 StaxCallback.__index = StaxCallback
 
+--- Instantiates a new instance of a network callback
+---@return StaxCallback
 function StaxCallback.New()
   local newCallback = {}
   setmetatable(newCallback, StaxCallback)
@@ -11,7 +17,10 @@ function StaxCallback.New()
 
   if newCallback.IsServer then
     RegisterNetEvent("STAX::Core::Server::RecieveCallback")
-    AddEventHandler("STAX::Core::Server::RecieveCallback", function(callback --[[ string ]], payload --[[ any ]])
+
+    ---@param callback string
+    ---@param payload any
+    AddEventHandler("STAX::Core::Server::RecieveCallback", function(callback, payload)
       for key, cb in pairs(newCallback.Callbacks) do
         if key == callback then
           cb(payload)
@@ -21,7 +30,10 @@ function StaxCallback.New()
     end)
   else
     RegisterNetEvent("STAX::Core::Client::RecieveCallback")
-    AddEventHandler("STAX::Core::Client::RecieveCallback", function(callback --[[ string ]], payload --[[ any ]])
+
+    ---@param callback string
+    ---@param payload any
+    AddEventHandler("STAX::Core::Client::RecieveCallback", function(callback, payload)
       for key, cb in pairs(newCallback.Callbacks) do
         if key == callback then
           cb(payload)
@@ -34,7 +46,13 @@ function StaxCallback.New()
   return newCallback
 end
 
-function StaxCallback:Fire(name --[[ string ]], resource --[[ string ]], data --[[ any ]], callback --[[ function ]], player --[[ number ]])
+--- Fires the callback and retrieves the data
+---@param name string
+---@param resource string
+---@param data any
+---@param callback function
+---@param player string
+function StaxCallback:Fire(name, resource, data, callback, player)
   local key = exports.stax_core:String_RandomString(10)
   self.Callbacks[key] = callback
   

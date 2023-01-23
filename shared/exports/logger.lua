@@ -1,5 +1,7 @@
+---@param action string
+---@param message string
 local function LogSuccess(action, message)
-  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^9SUCCESS ^0:: ^9{action}^0 :: ^3{message}", {
+  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^9SUCCESS ^0:: ^9{action}^0 :: ^3{message}^0", {
     action = action,
     message = message
   })
@@ -7,8 +9,10 @@ local function LogSuccess(action, message)
   print(msg)
 end
 
+---@param action string
+---@param message string
 local function LogError(action, message)
-  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^8ERROR ^0:: ^8{action}^0 :: ^3{message}", {
+  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^8ERROR ^0:: ^8{action}^0 :: ^3{message}^0", {
     action = action,
     message = message
   })
@@ -16,8 +20,10 @@ local function LogError(action, message)
   print(msg)
 end
 
+---@param action string
+---@param message string
 local function LogWarning(action, message)
-  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^1WARNING ^0:: ^1{action}^0 :: ^3{message}", {
+  local msg = exports.stax_core:String_Interpolate("^4[STAX] :: ^1WARNING ^0:: ^1{action}^0 :: ^3{message}^0", {
     action = action,
     message = message
   })

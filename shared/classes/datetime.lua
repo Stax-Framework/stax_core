@@ -8,10 +8,14 @@ local secondsCalcs = {
   second = 1
 }
 
+---@class StaxDateTime
+---@field public time string | osdate
 StaxDateTime = {}
 StaxDateTime.__index = StaxDateTime
 
-function StaxDateTime.New(number)
+--- Creates new instance of StaxDateTime with time provided
+---@param time osdate
+function StaxDateTime.New(time)
   local newDateTime = {}
   setmetatable(newDateTime, StaxDateTime)
 
@@ -20,6 +24,7 @@ function StaxDateTime.New(number)
   return newDateTime
 end
 
+--- Creates new instance of StaxDateTime at current time
 function StaxDateTime.Now()
   local newDateTime = {}
   setmetatable(newDateTime, StaxDateTime)
@@ -29,6 +34,9 @@ function StaxDateTime.Now()
   return newDateTime
 end
 
+--- Adds time onto the current instance time
+---@param timeObject table
+---@param setTime boolean
 function StaxDateTime:Add(timeObject, setTime)
   local seconds = 0
 
