@@ -10,7 +10,13 @@ function StaxPluginManager:AddPlugin(resource)
     self.Plugins[newPlugin.Key] = newPlugin
 
     if self.Plugins.Dependencies then
+      local timestamp = GetGameTimer() * 10000
+
       while not StaxPluginManager:ArePluginsMounted(self.Plugins.Dependencies) do
+        if timestamp < GetGameTimer() then
+          exports.stax_core:Logger_LogError("Could't wait any longer for dependencies", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
+          return
+        end
         Citizen.Wait(1000)
       end
     end
