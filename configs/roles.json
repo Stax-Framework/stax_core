@@ -1,0 +1,86 @@
+{
+  "roles": [
+    [
+      {
+        "role": "user",
+        "permissions": []
+      },
+      {
+        "role": "member",
+        "permissions": []
+      },
+      {
+        "role": "moderator",
+        "permissions": [
+          "user.warn.add",
+          "user.kick.add"
+        ]
+      },
+      {
+        "role": "admin",
+        "permissions": [
+          "user.warn.add",
+          "user.warn.remove",
+          "user.ban.add",
+          "user.ban.remove",
+          "user.kick.add",
+          "user.kick.remove",
+          "game.teleport.bring",
+          "game.teleport.goto",
+          "game.teleport.return"
+        ]
+      },
+      {
+        "role": "developer",
+        "permissions": [
+          "user.warn.add",
+          "user.warn.remove",
+          "user.ban.add",
+          "user.ban.remove",
+          "user.kick.add",
+          "user.kick.remove",
+          "game.teleport.bring",
+          "game.teleport.goto",
+          "game.teleport.return"
+        ]
+      },
+      {
+        "role": "owner",
+        "permissions": [
+          "user.warn.add",
+          "user.warn.remove",
+          "user.ban.add",
+          "user.ban.remove",
+          "user.kick.add",
+          "user.kick.remove",
+          "game.teleport.bring",
+          "game.teleport.goto",
+          "game.teleport.return"
+        ]
+      }
+    ]
+  ],
+  "permissions": {
+    "user": {
+      "warn": {
+        "add": "Give's the ability to issue a warning to a player.",
+        "remove": "Give's the ability to remove a warning from a player."
+      },
+      "ban": {
+        "add": "Give's the ability to issue a ban to a player.",
+        "remove": "Give's the ability to remove a ban from a player."
+      },
+      "kick": {
+        "add": "Give's the ability to issue a kick to a player.",
+        "remove": "Give's the ability to remove a kick from a player."
+      }
+    },
+    "game": {
+      "teleport": {
+        "bring": "Bring's a player to the player using the permission.",
+        "goto": "Teleports the player using the permission to another player.",
+        "return": "Return's a player to their last position before being teleported."
+      }
+    }
+  }
+}

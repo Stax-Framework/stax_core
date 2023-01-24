@@ -4,5 +4,13 @@
   "connecting_welcome_back": "Welcome Back!",
   "connecting_not_whitelisted": "Sorry :( You are not whitelisted!",
   "connecting_creating_user": "Welcome! Creating your user data now!",
-  "connecting_created_user": "Created Your User!"
+  "connecting_created_user": "Created Your User!",
+  "roles": {
+    "user": "User",
+    "member": "Member",
+    "moderator": "Moderator",
+    "admin": "Admin",
+    "dev": "Developer",
+    "owner": "Owner"
+  }
 }
