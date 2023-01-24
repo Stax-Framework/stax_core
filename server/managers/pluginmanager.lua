@@ -101,3 +101,15 @@ end)
 AddEventHandler("STAX::Core::Server::OnResourceStop", function(resource)
   StaxPluginManager:RemovePlugin(resource)
 end)
+
+--- Fires when a plugin is mounted
+---@param plugin StaxPlugin
+AddEventHandler("STAX::Core::Server::PluginMounted", function(plugin)
+  exports.stax_core:Logger_LogSuccess("Plugin Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+end)
+
+--- Fires when a plugin is unmounted
+---@param plugin StaxPlugin
+AddEventHandler("STAX::Core::Server::PluginUnMounted", function(plugin)
+  exports.stax_core:Logger_LogSuccess("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+end)
