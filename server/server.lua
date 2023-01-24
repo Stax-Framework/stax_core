@@ -51,17 +51,26 @@ AddEventHandler("STAX::Core::Server::PlayerConnecting", function(player, deferra
   end
 end)
 
-AddEventHandler("STAX::Core::Server::PlayerJoining", function(source --[[ number ]], oldSource --[[ number ]], player --[[ StaxPlayer ]])
+--- Watches for when the player is joining
+---@param source string
+---@param oldSource string
+---@param player StaxPlayer
+AddEventHandler("STAX::Core::Server::PlayerJoining", function(source, oldSource, player)
   StaxPlayerManager:AddPlayer(player)
 end)
 
-AddEventHandler("STAX::Core::Server::OnResourceStart", function(resource --[[ string ]])
+--- Watches for when this resource starts
+---@param resource string
+AddEventHandler("STAX::Core::Server::OnResourceStart", function(resource)
   if GetCurrentResourceName() ~= resource then return end
   SetGameType("Stax Server Framework")
   SetMapName("STAX")
 end)
 
-AddEventHandler("STAX::Core::Server::PlayerDropped", function(player --[[ StaxPlayer ]], reason --[[ string ]])
-  StaxPlayerManager:RemovePlayer(player.Handle)
+--- Watches for when a player is dropped from the server
+---@param player StaxPlayer
+---@param reason string
+AddEventHandler("STAX::Core::Server::PlayerDropped", function(player, reason)
+  StaxPlayerManager:RemovePlayer(player)
   TriggerEvent("STAX::Core::Server::PlayerLeft", player)
 end)

@@ -18,16 +18,18 @@ local function StringInterpolate(str, data)
 end
 
 --- Splits string into a table based on a seperator
----@param str string
+---@param passed string
 ---@param sep string
 ---@return table
-local function StringSplit(str, sep)
-  local result = {}
-  if sep == nil then sep = "%s" end
-  for match in string.match(str, "([^" .. sep .. "]+)") do
-    table.insert(result, match)
-  end
-  return result
+local function StringSplit(passed, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(passed, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
 end
 
 --- Formats a string into an index value

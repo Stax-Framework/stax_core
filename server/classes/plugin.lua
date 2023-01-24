@@ -127,16 +127,41 @@ function StaxPlugin:LoadConfig()
     return false
   end
 
-  local config = {}
+  local config = { client = {}, server = {}, shared = {} }
 
   for a = 1, #files do
-    local cfg = LoadResourceFile(self.ResourceName, "/configs/" .. files[a])
+    if not string.find(files[a], ".json") then
+      break
+    end
 
-    config[files[a]:gsub(".json", "")] = json.decode(cfg)
+    local boundary = nil
+    local configKey = nil
+    local data = LoadResourceFile(self.ResourceName, "/configs/" .. files[a])
+    local cfg = json.decode(data)
+
+    if string.find(files[a], ".client.") then
+      boundary = "client"
+      configKey = string.gsub(files[a], ".client.json", "")
+      
+    elseif string.find(files[a], ".server.") then
+      boundary = "server"
+      configKey = string.gsub(files[a], ".server.json", "")
+    else
+      boundary = "shared"
+      configKey = string.gsub(files[a], ".json", "")
+    end
+
+    if not config[boundary][configKey] then
+      config[boundary][configKey] = cfg
+    else
+      for l, p in pairs(cfg) do
+        config[boundary][configKey][l] = p
+      end
+    end
   end
 
+  self.Config = StaxConfig.New(config.client, config.server, config.shared)
 
-  self.Config = config
   exports.stax_core:Logger_LogSuccess("Loaded Config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 end
 
@@ -150,7 +175,7 @@ function StaxPlugin:LoadLocale()
   end
 
   --- REMOVE THIS ONCE YOU ADD CONFIG GETTER METHODS
-  local lang = corePlugin.Config["server"].locale
+  local lang = corePlugin.Config:Get("framework.locale")
 
   if not lang then
     exports.stax_core:Logger_LogError("Couldn't get language from core config", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
@@ -164,7 +189,9 @@ function StaxPlugin:LoadLocale()
     return
   end
 
-  self.Locale = json.decode(locale)
+  local decodedLocale = json.decode(locale)
+
+  self.Locale = StaxLocale.New(decodedLocale)
 
   exports.stax_core:Logger_LogSuccess("Loaded Locale", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
 end
