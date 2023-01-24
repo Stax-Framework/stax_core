@@ -9,15 +9,15 @@ function StaxPluginManager:AddPlugin(resource)
   local validPlugin = newPlugin:PreInit(function(CallInit)
     self.Plugins[newPlugin.Key] = newPlugin
 
-    if self.Plugins.Dependencies then
+    if newPlugin.Dependencies then
       local timestamp = GetGameTimer() * 10000
 
-      while not StaxPluginManager:ArePluginsMounted(self.Plugins.Dependencies) do
+      while not StaxPluginManager:ArePluginsMounted(newPlugin.Dependencies) do
         if timestamp < GetGameTimer() then
           exports.stax_core:Logger_LogError("Could't wait any longer for dependencies", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
           return
         end
-        Citizen.Wait(1000)
+        Citizen.Wait(100)
       end
     end
 
@@ -79,7 +79,7 @@ function StaxPluginManager:ArePluginsMounted(plugins)
   for pluginKey, plugin in pairs(self.Plugins) do
     for _, key in pairs(plugins) do
       if pluginKey == key then
-        if not self.Plugins.Mounted then
+        if not plugin.Mounted then
           allMounted = false
           break
         end
