@@ -1,0 +1,3 @@
+# stax_core
+
+# BASE CORE FRAMEWORK SCRIPT
