@@ -54,7 +54,7 @@ end
 ---@param mount function Calls for the plugin to mount
 function StaxPlugin:Init(mount)
   self:LoadConfig()
-  self:StartMigrations()
+  self:Migrate()
   mount()
 end
 
@@ -94,15 +94,6 @@ function StaxPlugin:GetPluginInfo()
   end
 
   return false
-end
-
---- Starts the migration process for the plugin
-function StaxPlugin:StartMigrations()
-  local completedMigrations = self:Migrate()
-
-  if not completedMigrations then
-    exports.stax_core:Logger_LogError("Couldn't Complete Migrations", "[(" .. self.ResourceName .. ") " .. self.Name .. "]")
-  end
 end
 
 --- Gets the migratiosn from the path and executes the plugins
