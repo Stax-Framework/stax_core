@@ -63,12 +63,12 @@ function StaxPlugin:Mount()
   self:LoadLocale()
   self.Mounted = true
 
-  TriggerEvent("STAX::Core::Server::PluginMounted", self.Key)
+  TriggerEvent("STAX::Core::Server::PluginMounted", self)
 end
 
 function StaxPlugin:UnMount()
   self.Mounted = false
-  TriggerEvent("STAX::Core::Server::PluginUnMounted", self.Key)
+  TriggerEvent("STAX::Core::Server::PluginUnMounted", self)
 end
 
 --- Get plugin name
