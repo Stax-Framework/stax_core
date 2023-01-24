@@ -4,15 +4,23 @@ StaxPluginManager.Plugins = {}
 --- Creates new plugin instance and stores it
 ---@param resource string
 function StaxPluginManager:AddPlugin(resource)
-  local newPlugin, validPlugin = StaxPlugin.New(resource);
+  local newPlugin = StaxPlugin.New(resource);
+
+  local validPlugin = newPlugin:PreInit(function(CallInit)
+    self.Plugins[newPlugin.Key] = newPlugin
+
+    if self.Plugins.Dependencies then
+      while not StaxPluginManager:ArePluginsMounted(self.Plugins.Dependencies) do
+        Citizen.Wait(1000)
+      end
+    end
+
+    CallInit()
+  end)
 
   if not validPlugin then
     return
   end
-
-  self.Plugins[newPlugin.Key] = newPlugin
-
-  newPlugin:Mounted()
 end
 
 --- Removes the plugin from the plugin manager
@@ -23,6 +31,8 @@ function StaxPluginManager:RemovePlugin(resource)
   if not key then
     return
   end
+
+  self.Plugins[key]:UnMount()
 
   self.Plugins[key] = nil
 end
@@ -52,6 +62,26 @@ function StaxPluginManager:GetPluginKey(resource)
   end
 
   return key
+end
+
+--- Gets if all defined plugins are mounted
+---@param plugins table<string>
+---@return boolean
+function StaxPluginManager:ArePluginsMounted(plugins)
+  local allMounted = true
+
+  for pluginKey, plugin in pairs(self.Plugins) do
+    for _, key in pairs(plugins) do
+      if pluginKey == key then
+        if not self.Plugins.Mounted then
+          allMounted = false
+          break
+        end
+      end
+    end
+  end
+
+  return allMounted
 end
 
 --- Hooks into the resource start base event

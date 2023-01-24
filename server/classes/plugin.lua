@@ -2,16 +2,17 @@
 ---@field public ResourceName string Plugin resource folder name
 ---@field public Key string Plugin defined key
 ---@field public Name string Plugin defined name
----@field public Description string Plugin define description
+---@field public Description string Plugin defined description
+---@field public Dependencies table<string> Plugin defined dependencies
 ---@field public Config table Plugin configurations
 ---@field public Locale table Plugin localization
+---@field public Mounted boolean Plugin is mounted
 StaxPlugin = {}
 StaxPlugin.__index = StaxPlugin
 
 --- Create new instance of StaxPlugin
 ---@param resource string
 ---@return StaxPlugin
----@return boolean
 function StaxPlugin.New(resource)
   local newPlugin = {}
   setmetatable(newPlugin, StaxPlugin)
@@ -20,35 +21,54 @@ function StaxPlugin.New(resource)
   newPlugin.Key = nil
   newPlugin.Name = nil
   newPlugin.Description = nil
+  newPlugin.Dependencies = nil
   newPlugin.Config = nil
   newPlugin.Locale = nil
 
-  newPlugin:Init()
+  newPlugin.Mounted = false
 
-  local validPlugin = false
-
-  if newPlugin.Key then
-    validPlugin = true
-  end
-
-  return newPlugin, validPlugin
+  return newPlugin
 end
 
---- Initializes the plugins
-function StaxPlugin:Init()
+--- Preinit Function
+---@param callback function Calls the Initialize Function
+function StaxPlugin:PreInit(callback)
   local hasPluginInfo = self:GetPluginInfo()
 
   if not hasPluginInfo then
-    return
+    return false
   end
 
+  local function CallInit()
+    self:Init(function()
+      self:Mount()
+    end)
+  end
+
+  callback(CallInit)
+
+  return true
+end
+
+--- Initializes the plugins
+---@param mount function Calls for the plugin to mount
+function StaxPlugin:Init(mount)
   self:LoadConfig()
   self:StartMigrations()
+  mount()
 end
 
 --- Fires after the plugin has been mounted
-function StaxPlugin:Mounted()
+function StaxPlugin:Mount()
   self:LoadLocale()
+  self.Mounted = true
+
+  TriggerEvent("STAX::Core::Server::PluginMounted", self.Key)
+end
+
+function StaxPlugin:UnMount()
+  self.Mounted = false
+  TriggerEvent("STAX::Core::Server::PluginUnMounted", self.Key)
 end
 
 --- Get plugin name
@@ -65,6 +85,10 @@ function StaxPlugin:GetPluginInfo()
   self.Name = extra.name
   self.Description = extra.description
 
+  if extra.dependency then
+    self.Dependencies = extra.dependency
+  end
+ 
   if self.Key and self.Name and self.Description then
     return true
   end
@@ -105,6 +129,7 @@ function StaxPlugin:Migrate()
     })
   
     if not results.ok then
+      print("Query Results: " .. json.encode(results))
       return false
     end
 
