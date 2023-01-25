@@ -190,7 +190,6 @@ function StaxPlugin:LoadLocale()
     return
   end
 
-  --- REMOVE THIS ONCE YOU ADD CONFIG GETTER METHODS
   local lang = corePlugin.Config:Get("framework.locale")
 
   if not lang then
