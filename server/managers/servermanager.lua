@@ -1,24 +1,27 @@
 StaxServerManager = {}
 StaxServerManager.ReadyStates = {
-  DatabaseReady = false
+  PluginsLoaded = false
 }
 
--- FUNCTIONS
-function StaxServerManager:SetReadyState(key --[[ string ]], ready --[[ boolean ]])
+--- Sets a specific server ready state
+---@param key string
+---@param ready boolean
+function StaxServerManager:SetReadyState(key, ready)
   if self.ReadyStates[key] ~= nil then
     self.ReadyStates[key] = ready
-    if (ready) then
-      print("[" .. key .. "] is ready!")
-    else
-      print("[" .. key .. "] is not ready!")
-    end
+    exports.stax_core:Logger_LogSuccess("[StaxServerManager]: ReadyStateChanged", key .. " - " .. tostring(ready))
   end
 end
 
-function StaxServerManager:GetReadyState(key --[[ string ]])
+--- Gets a specific server ready state
+---@param key string
+---@return boolean
+function StaxServerManager:GetReadyState(key)
   return self.ReadyStates[key] or false
 end
 
+--- Checks if all the ready states are true
+---@return boolean
 function StaxServerManager:ServerReady()
   for _, v in pairs(self.ReadyStates) do
     if v == false then
@@ -29,11 +32,11 @@ function StaxServerManager:ServerReady()
 end
 
 -- EXPORT FUNCTIONS
-local function SetReadyState(key --[[ string ]], ready --[[ boolean ]])
+local function SetReadyState(key, ready)
   StaxServerManager:SetReadyState(key, ready)
 end
 
-local function GetReadyState(key --[[ string ]])
+local function GetReadyState(key)
   return StaxServerManager:GetReadyState(key)
 end
 
