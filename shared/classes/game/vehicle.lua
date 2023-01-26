@@ -1,7 +1,7 @@
 ---@class StaxVehicle
 ---@field public IsServer boolean Whether or not the class instance is on the client or server
 ---@field public Handle number Entity Id
----@field public Blip number Blip Id
+---@field public NetworkHandle number Entity Network Id
 StaxVehicle = {}
 StaxVehicle.__index = StaxVehicle
 
@@ -11,692 +11,74 @@ function StaxVehicle.New(handle)
   setmetatable(newVehicle, StaxVehicle)
     
   newVehicle.IsServer = IsDuplicityVersion()
-  newVehicle.Handle = handle
 
-  -- Blips
-  newVehicle.Blip = nil
+  newVehicle.Handle = handle
+  newVehicle.NetworkHandle = nil
+
+  if NetworkGetEntityIsNetworked(self.Handle) then
+    self.NetworkHandle = NetworkGetNetworkIdFromEntity(self.Handle)
+  end
 
   return newVehicle
 end
 
-function StaxVehicle.Create(model, position, rotation, options)
+--- Create a new instance of StaxVehicle and create vehicle entity
+function StaxVehicle.Create(model, position, heading, options)
   local newVehicle = {}
   setmetatable(newVehicle, StaxVehicle)
 
+  local hash = GetHashKey(model)
+
+  newVehicle.IsServer = IsDuplicityVersion()
+
   newVehicle.Handle = nil
-  newVehicle.Blip = nil
+  newVehicle.NetworkHandle = nil
+
+
+  --- CREATING VEHICLE
+  local networked = false
+  local mission = false
+
+  if type(options) == "table" then
+    if options.networked then networked = options.networked end
+    if options.mission then mission = options.mission end
+  end
+
+  if not IsModelInCdimage(hash) then
+    local loadTimeCutoff = GetGameTimer() + 10000
+
+    RequestModel(hash)
+    while not HasModelLoaded(hash) do
+      if GetGameTimer() > loadTimeCutoff then
+        return nil
+      end
+      Citizen.Wait(0)
+    end
+  end
+
+  local spawnedVehicle = CreateVehicle(hash, position.x, position.y, position.z, heading, networked, mission)
+
+  if networked then
+    self.NetworkHandle = NetworkGetNetworkIdFromEntity(spawnedVehicle)
+  end
 
   return newVehicle
 end
 
---- Adds a blip to the vehicle entity
----@return number
-function StaxVehicle:AddBlip()
-  self.Blip = AddBlipForEntity(self.Handle)
-  return self.Blip
+function StaxVehicle:Delete()
+  DeleteVehicle(self.Handle)
 end
 
---- Gets the vehicles engine status
----@return boolean
-function StaxVehicle:IsEngineRunning()
-  return GetIsVehicleEngineRunning(self.Handle)
-end
-
---- Gets if the primary color is custom
----@return boolean
-function StaxVehicle:IsPrimaryColorCustom()
-  return GetIsVehiclePrimaryColourCustom(self.Handle)
-end
-
---- Gets if the secondary color is custom
----@return boolean
-function StaxVehicle:IsSecondaryColorCustom()
-  return GetIsVehicleSecondaryColourCustom(self.Handle)
-end
-
---- Gets the ped inside the vehicle seat
----@param seat StaxVehicleSeats
-function StaxVehicle:GetPedInSeat(seat)
-  local handle = GetPedInVehicleSeat(self.Handle, seat)
-
-  --- RETURN PED CLASS INSTANCE
-end
-
---- Gets the last ped inside the vehicle seat
----@param seat StaxVehicleSeats
-function StaxVehicle:GetLastPedInSeat(seat)
-  local handle = GetLastPedInVehicleSeat(self.Handle, seat)
-
-  --- RETURN PED CLASS INSTANCE
-end
-
---- Gets the vehicles body health
----@return number
-function StaxVehicle:GetBodyHealth()
-  return GetVehicleBodyHealth(self.Handle)
-end
-
---- Gets the vehicle current clutch state
----@return number
-function StaxVehicle:GetClutch()
-  return GetVehicleClutch(self.Handle)
-end
-
---- Gets the vehicles colors
----@return number, number
-function StaxVehicle:GetColors()
-  return GetVehicleColours(self.Handle)
-end
-
-function StaxVehicle:GetCurrentGear()
-
-end
-
-function StaxVehicle:GetCurrentRPM()
-
-end
-
-function StaxVehicle:GetCustomPrimaryColor()
-
-end
-
-function StaxVehicle:GetCustomSecondaryColor()
-
-end
-
-function StaxVehicle:GetDashboardBoost()
-
-end
-
-function StaxVehicle:GetDashboardColor()
-
-end
-
-function StaxVehicle:GetDashboardFuel()
-
-end
-
-function StaxVehicle:GetDashboardLights()
-  
-end
-
-function StaxVehicle:GetDashboardOilPressure()
-
-end
-
-function StaxVehicle:GetDashboardOilTemp()
-
-end
-
-function StaxVehicle:GetDashboardRPM()
-
-end
-
-function StaxVehicle:GetDashboardSpeed()
-
-end
-
-function StaxVehicle:GetDashboardTemp()
-
-end
-
-function StaxVehicle:GetDashboardVacuum()
-
-end
-
-function StaxVehicle:GetDashboardWaterTemp()
-
-end
-
-function StaxVehicle:GetDirtLevel()
-
-end
-
-function StaxVehicle:GetDoorLockState()
-
-end
-
-function StaxVehicle:GetDoorStatus()
-
-end
-
-function StaxVehicle:GetDoorsLockedForPlayers()
-
-end
-
-function StaxVehicle:GetDrawnWheelAngleMult()
-
-end
-
-function StaxVehicle:GetEngineHealth()
-
-end
-
-function StaxVehicle:GetEngineTemperature()
-
-end
-
-function StaxVehicle:GetExtraColors()
-
-end
-
-function StaxVehicle:GetFlightNozzlePosition()
-
-end
-
-function StaxVehicle:GetFuelLevel()
-
-end
-
-function StaxVehicle:GetGravityAmount()
-
-end
-
-function StaxVehicle:GetHandbrake()
-
-end
-
-function StaxVehicle:GetHandlingFloat()
-
-end
-
-function StaxVehicle:GetHandlingInt()
-
-end
-
-function StaxVehicle:GetHandlingVector()
-
-end
-
-function StaxVehicle:GetHeadlightsColor()
-
-end
-
-function StaxVehicle:GetHighGear()
-
-end
-
-function StaxVehicle:HomingLockonState()
-
-end
-
-function StaxVehicle:GetIndicatorLights()
-
-end
-
-function StaxVehicle:GetInteriorColor()
-
-end
-
-function StaxVehicle:GetLightMult()
-
-end
-
-function StaxVehicle:GetLightsState()
-
-end
-
-function StaxVehicle:GetLivery()
-
-end
-
-function StaxVehicle:GetLockonTarget()
-
-end
-
-function StaxVehicle:GetNextGear()
-
-end
-
-function StaxVehicle:GetNumberOfWheels()
-
-end
-
-function StaxVehicle:GetPlateText()
-
-end
-
-function StaxVehicle:GetPlateTextIndex()
-
-end
-
-function StaxVehicle:GetOilLevel()
-
-end
-
-function StaxVehicle:GetFuelTankHealth()
-
-end
-
-function StaxVehicle:GetRadioStationIndex()
-
-end
-
-function StaxVehicle:GetRoofLivery()
-
-end
-
-function StaxVehicle:GetSteeringAngle()
-
-end
-
-function StaxVehicle:GetSteeringScale()
-
-end
-
-function StaxVehicle:GetThrottleOffset()
-
-end
-
-function StaxVehicle:GetTopSpeedModifier()
-
-end
-
-function StaxVehicle:GetTurboPressure()
-
-end
-
-function StaxVehicle:GetType()
-
-end
-
-function StaxVehicle:GetTireSmokeColor()
-
-end
-
-function StaxVehicle:GetWheelBrakePressure()
-
-end
-
-function StaxVehicle:GetWheelFlags()
-
-end
-
-function StaxVehicle:GetWheelHealth()
-
-end
-
-function StaxVehicle:GetWheelIsPowered()
-
-end
-
-function StaxVehicle:GetWheelPower()
-
-end
-
-function StaxVehicle:GetWheelRimColliderSize()
-
-end
-
-function StaxVehicle:GetWheelRotationSpeed()
-
-end
-
-function StaxVehicle:GetWheelSize()
-
-end
-
-function StaxVehicle:GetWheelSpeed()
-
-end
-
-function StaxVehicle:GetWheelSurfaceMaterial()
-
-end
-
-function StaxVehicle:GetWheelSuspensionCompression()
-
-end
-
-function StaxVehicle:GetWheelTractionVectorLength()
-
-end
-
-function StaxVehicle:GetWheelType()
-
-end
-
-function StaxVehicle:GetWheelWidth()
-
-end
-
-function StaxVehicle:GetWheelXOffset()
-
-end
-
-function StaxVehicle:GetWheelYRotation()
-
-end
-
-function StaxVehicle:GetWheelieState()
-
-end
-
-function StaxVehicle:GetWindowTint()
-
-end
-
-function StaxVehicle:GetXenonLightCustomColor()
-
-end
-
-function StaxVehicle:HasBeenOwnedByPlayer()
-
-end
-
-function StaxVehicle:IsAlarmSet()
-
-end
-
-function StaxVehicle:IsEngineStarting()
-
-end
-
-function StaxVehicle:IsExtraTurnedOn()
-
-end
-
-function StaxVehicle:IsInteriorLightOn()
-
-end
-
-function StaxVehicle:DoesNeedHotwired()
-
-end
-
-function StaxVehicle:IsPreviouslyOwnedByPlayer()
-
-end
-
-function StaxVehicle:IsSirenOn()
-
-end
-
-function StaxVehicle:IsTireBursted()
-
-end
-
-function StaxVehicle:IsVehicleWanted()
-
-end
-
-function StaxVehicle:SetHandlingField()
-
-end
-
-function StaxVehicle:SetHandlingFloat()
-
-end
-
-function StaxVehicle:SetHandlingInt()
-
-end
-
-function StaxVehicle:SetHandlingVector()
-
-end
-
-function StaxVehicle:SetPedInSeat()
-
-end
-
-function StaxVehicle:SetVehicleAlarm()
-
-end
-
-function StaxVehicle:SetAlarmTimeLeft()
-
-end
-
-function StaxVehicle:SetAutoRepairDisabled()
-
-end
-
-function StaxVehicle:SetBodyHealth()
-
-end
-
-function StaxVehicle:SetClutch()
-
-end
-
-function StaxVehicle:SetColorCombination()
-
-end
-
-function StaxVehicle:SetVehicleColors()
-
-end
-
-function StaxVehicle:SetCurrentRPM()
-
-end
-
-function StaxVehicle:SetCustomPrimaryColor()
-
-end
-
-function StaxVehicle:SetCustomSecondaryColor()
-
-end
-
-function StaxVehicle:SetDirtLevel()
-
-end
-
-function StaxVehicle:SetDoorBroken()
-
-end
-
-function StaxVehicle:SetDoorsLocked()
-
-end
-
-function StaxVehicle:SetEngineTemperature()
-
-end
-
-function StaxVehicle:SetFuelLevel()
-
-end
-
-function StaxVehicle:SetGravityAmount()
-
-end
-
-function StaxVehicle:SetHighGear()
-
-end
-
-function StaxVehicle:SetPlateText()
-
-end
-
-function StaxVehicle:SetOilLevel()
-
-end
-
-function StaxVehicle:SetSteeringAngle()
-
-end
-
-function StaxVehicle:SetSteeringScale()
-
-end
-
-function StaxVehicle:SetSuspensionHeight()
-
-end
-
-function StaxVehicle:SetTurboPressure()
-
-end
-
-function StaxVehicle:SetWheelBrakePressure()
-
-end
-
-function StaxVehicle:SetWheelFlags()
-
-end
-
-function StaxVehicle:SetWheelHealth()
-
-end
-
-function StaxVehicle:SetWheelIsPowered()
-
-end
-
-function StaxVehicle:SetWheelPower()
-
-end
-
-function StaxVehicle:SetWheelRimColliderSize()
-
-end
-
-function StaxVehicle:SetWheelRotationSpeed()
-  
-end
-
-function StaxVehicle:SetWheelSize()
-
-end
-
-function StaxVehicle:SetWheelTireColliderSize()
-
-end
-
-function StaxVehicle:SetWheelTireColliderWidth()
-
-end
-
-function StaxVehicle:SetWheelTractionVectorLength()
-
-end
-
-function StaxVehicle:SetWheelwidth()
-
-end
-
-function StaxVehicle:SetWheelXOffset()
-
-end
-
-function StaxVehicle:SetWheelYRotation()
-
-end
-
-function StaxVehicle:SetWheelieState()
-
-end
-
-function StaxVehicle:SetXenonLightsCustomColor()
-
-end
-
-function StaxVehicle:BlipSiren()
-
-end
-
-function StaxVehicle:EnableExhaustPops()
-
-end
-
-function StaxVehicle:ForceEngineAudio()
-
-end
-
-function StaxVehicle:GetDefaultHorn()
-
-end
-
-function StaxVehicle:GetDefaultHornIgnoreMods()
-
-end
-
-function StaxVehicle:GetDefaultHornVariation()
-
-end
-
-function StaxVehicle:IsHornActive()
-
-end
-
-function StaxVehicle:IsPlayerRadioEnabled()
-  
-end
-
-function StaxVehicle:IsAudiblyDamaged()
-
-end
-
-function StaxVehicle:IsRadioEnabled()
-
-end
-
-function StaxVehicle:IsRadioLoud()
-
-end
-
-function StaxVehicle:OverrideHorn()
-
-end
-
-function StaxVehicle:PlayStream()
-
-end
-
-function StaxVehicle:PlayDoorCloseSound()
-
-end
-
-function StaxVehicle:PlayDoorOpenSound()
-
-end
-
-function StaxVehicle:PreloadAudio()
-
-end
-
-function StaxVehicle:SetAudioPriority()
-
-end
-
-function StaxVehicle:SetAudioBodyDamageFactor()
-
-end
-
-function StaxVehicle:SetAudioEngineDamageFactor()
-
-end
-
-function StaxVehicle:SetBoostActive()
-
-end
-
-function StaxVehicle:SetHornVariation()
-
-end
-
-function StaxVehicle:SetRadioEnabled()
-
-end
+function StaxVehicle:SetPosition(position, options)
+  local clearArea = false
 
-function StaxVehicle:SetRadioLoud()
+  if type(options) == "table" then
+    if options.clearArea then clearArea = options.clearArea end
+  end
 
+  SetEntityCoords(self.Handle, position.x, position.y, position.z, false, false, false, clearArea)
 end
 
-function StaxVehicle:SetStartupRevSound()
-
-end
-
-function StaxVehicle:SoundHornThisFrame()
-
+function StaxVehicle:GetPosition()
+  return GetEntityCoords(self.Handle, false)
 end
-
-function StaxVehicle:TriggerSiren()
-
-end
-
