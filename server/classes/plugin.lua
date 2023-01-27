@@ -114,13 +114,14 @@ function StaxPlugin:Migrate()
     local sql = LoadResourceFile(self.ResourceName, "/sql/" .. files[a])
     
     exports.stax_core:Logger_LogSuccess("Executing Query", "[(" .. self.ResourceName .. ") " .. self.Name .. "] :: " .. files[a])
-    
-    local results = exports.ExternalSQL:AsyncQuery({
-      query = sql
-    })
-  
-    if not results.ok then
-      print("Query Results: " .. json.encode(results))
+
+    local results = StaxDatabase.AsyncQuery(sql)
+
+    if not results then
+      return false
+    end
+
+    if not results.Ok then
       return false
     end
 
