@@ -6,6 +6,8 @@ StaxVehicle = {}
 StaxVehicle.__index = StaxVehicle
 
 --- Create a new instance of StaxVehicle from already existing vehicle entity
+---@param handle number
+---@return StaxVehicle
 function StaxVehicle.New(handle)
   local newVehicle = {}
   setmetatable(newVehicle, StaxVehicle)
@@ -23,6 +25,10 @@ function StaxVehicle.New(handle)
 end
 
 --- Create a new instance of StaxVehicle and create vehicle entity
+---@param model string | number
+---@param position any
+---@param heading any
+---@param options any
 function StaxVehicle.Create(model, position, heading, options)
   local newVehicle = {}
   setmetatable(newVehicle, StaxVehicle)
