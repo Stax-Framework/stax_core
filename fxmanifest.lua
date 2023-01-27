@@ -23,6 +23,10 @@ client_scripts {
 }
 
 server_scripts {
+  -- Dependencies
+  "@stax_database/classes/query.lua",
+  
+  -- Scripts
   "server/baseevents.lua",
   "server/exports/*.lua",
   "server/classes/player.lua",
