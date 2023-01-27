@@ -35,39 +35,46 @@ function StaxUser.Create(player)
 
   local playerIdentifier = player:GetIdentifier("license")
 
-  local insertedUser = exports.ExternalSQL:AsyncQuery({
-    query = [[ INSERT INTO `users` (`name`, `identifier`) VALUES (:name, :identifier) ]],
-    data = {
-      name = player.Name,
-      identifier = playerIdentifier
-    }
+  local insertedUser = StaxDatabase.AsyncQuery([[ INSERT INTO `users` (`name`, `identifier`) VALUES (:name, :identifier) ]], {
+    name = player.Name, identifier = playerIdentifier
   })
 
-  if not insertedUser.ok then
+  if not insertedUser then
     exports.stax_core:Logger_LogError("Couldn't create user account", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  local user = exports.ExternalSQL:AsyncQuery({
-    query = [[ SELECT * FROM `users` WHERE `identifier` = :identifier LIMIT 1 ]],
-    data = {
-      identifier = playerIdentifier
-    }
+  if not insertedUser.Ok then
+    exports.stax_core:Logger_LogError("Couldn't create user account", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  local user = StaxDatabase.AsyncQuery([[ SELECT * FROM `users` WHERE `identifier` = :identifier LIMIT 1 ]], {
+    identifier = playerIdentifier
   })
 
-  if not user.ok then
+  if not user then
+    return nil
+  end
+
+  if not user.Ok then
     exports.stax_core:Logger_LogError("Couldn't load newly created user account", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  newUser.Id = user.results[1].id
-  newUser.Name = user.results[1].name
-  newUser.Identifier = user.results[1].identifier
-  newUser.Role = user.results[1].role
-  newUser.Allowlisted = user.results[1].allowlisted
-  newUser.Priority = user.results[1].priority
-  newUser.CreatedAt = user.results[1].created_at
-  newUser.LastPlayedAt = user.results[1].last_played_at
+  if #user.Results < 1 then
+    exports.stax_core:Logger_LogError("Couldn't load newly created user account", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  newUser.Id = user.Results[1].id
+  newUser.Name = user.Results[1].name
+  newUser.Identifier = user.Results[1].identifier
+  newUser.Role = user.Results[1].role
+  newUser.Allowlisted = user.Results[1].allowlisted
+  newUser.Priority = user.Results[1].priority
+  newUser.CreatedAt = user.Results[1].created_at
+  newUser.LastPlayedAt = user.Results[1].last_played_at
 
   newUser.Bans = {}
   newUser.Kicks = {}
@@ -83,26 +90,37 @@ function StaxUser.Load(player)
   local newUser = {}
   setmetatable(newUser, StaxUser)
 
-  local user = exports.ExternalSQL:AsyncQuery({
-    query = [[ SELECT * FROM `users` WHERE `identifier` = :identifier LIMIT 1 ]],
-    data = {
-      identifier = player:GetIdentifier("license")
-    }
+  local user = StaxDatabase.AsyncQuery([[ SELECT * FROM `users` WHERE `identifier` = :identifier LIMIT 1 ]], {
+    identifier = playerIdentifier
   })
 
-  if not user.ok then
+  if not user then
+    return nil
+  end
+
+  if not user.Ok then
+    exports.stax_core:Logger_LogError("Couldn't load newly created user account", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  if not user.Ok then
     exports.stax_core:Logger_LogError("Couldn't load user account", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  newUser.Id = user.results[1].id
-  newUser.Name = user.results[1].name
-  newUser.Identifier = user.results[1].identifier
-  newUser.Role = user.results[1].role
-  newUser.Allowlisted = user.results[1].allowlisted
-  newUser.Priority = user.results[1].priority
-  newUser.CreatedAt = user.results[1].created_at
-  newUser.LastPlayedAt = user.results[1].last_played_at
+  if #user.Results < 1 then
+    exports.stax_core:Logger_LogError("Couldn't load newly created user account", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  newUser.Id = user.Results[1].id
+  newUser.Name = user.Results[1].name
+  newUser.Identifier = user.Results[1].identifier
+  newUser.Role = user.Results[1].role
+  newUser.Allowlisted = user.Results[1].allowlisted
+  newUser.Priority = user.Results[1].priority
+  newUser.CreatedAt = user.Results[1].created_at
+  newUser.LastPlayedAt = user.Results[1].last_played_at
 
   newUser.Bans = newUser:LoadBans()
   newUser.Kicks = newUser:LoadKicks()
@@ -128,19 +146,21 @@ end
 
 --- Loads the users stored bans
 function StaxUser:LoadBans()
-  local bans = exports.ExternalSQL:AsyncQuery({
-    query = [[ SELECT * FROM `user_bans` WHERE `user_id` = :id ]],
-    data = {
-      id = newUser.Id
-    }
+  local bans = StaxDatabase.AsyncQuery([[ SELECT * FROM `user_bans` WHERE `user_id` = :id ]], {
+    id = self.Id
   })
 
-  if not bans.ok then
+  if not bans then
     exports.stax_core:Logger_LogError("Couldn't load user bans", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  return bans.results
+  if not bans.Ok then
+    exports.stax_core:Logger_LogError("Couldn't load user bans", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  return bans.Results
 end
 
 --- Creates a new ban record for this user
@@ -149,17 +169,18 @@ end
 ---@param admin number
 ---@return boolean
 function StaxUser:CreateBan(reason, permanent, admin)
-  local insertedBan = exports.ExternalSQL:AsyncQuery({
-    query = [[ INSERT INTO `user_bans` (`reason`, `permanent`, `admin_id`, `user_id`) VALUES (:reason, :permanent, :admin, :user) ]],
-    data = {
-      reason = reason,
-      permanent = permanent,
-      admin = admin,
-      user = self.Id
-    }
+  local insertedBan = StaxDatabase.AsyncQuery([[ INSERT INTO `user_bans` (`reason`, `permanent`, `admin_id`, `user_id`) VALUES (:reason, :permanent, :admin, :user) ]], {
+    reason = reason,
+    permanent = permanent,
+    admin = admin,
+    user = self.Id
   })
 
-  if not insertedBan.ok then
+  if not insertedBan then
+    return false
+  end
+
+  if not insertedBan.Ok then
     return false
   end
 
@@ -168,19 +189,21 @@ end
 
 --- Loads the users stored kicks
 function StaxUser:LoadKicks()
-  local kicks = exports.ExternalSQL:AsyncQuery({
-    query = [[ SELECT * FROM `user_kicks` WHERE `user_id` = :id ]],
-    data = {
-      id = newUser.Id
-    }
+  local kicks = StaxDatabase.AsyncQuery([[ SELECT * FROM `user_kicks` WHERE `user_id` = :id ]], {
+    id = self.Id
   })
 
-  if not kicks.ok then
+  if not kicks then
     exports.stax_core:Logger_LogError("Couldn't load user kicks", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  return kicks.results
+  if not kicks.Ok then
+    exports.stax_core:Logger_LogError("Couldn't load user kicks", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  return kicks.Results
 end
 
 --- Creates a new kick record for this user
@@ -188,17 +211,18 @@ end
 ---@param admin number
 ---@return boolean
 function StaxUser:CreateKick(reason, admin)
-  local insertedKick = exports.ExternalSQL:AsyncQuery({
-    query = [[ INSERT INTO `user_kicks` (`reason`, `admin_id`, `user_id`) VALUES (:reason, :admin, :user) ]],
-    data = {
-      reason = reason,
-      permanent = permanent,
-      admin = admin,
-      user = self.Id
-    }
+  local insertedKick = StaxDatabase.AsyncQuery([[ INSERT INTO `user_kicks` (`reason`, `admin_id`, `user_id`) VALUES (:reason, :admin, :user) ]], {
+    reason = reason,
+    permanent = permanent,
+    admin = admin,
+    user = self.Id
   })
 
-  if not insertedKick.ok then
+  if not insertedKick then
+    return false
+  end
+
+  if not insertedKick.Ok then
     return false
   end
 
@@ -207,19 +231,21 @@ end
 
 --- Loads the users stored warnings
 function StaxUser:LoadWarns()
-  local warns = exports.ExternalSQL:AsyncQuery({
-    query = [[ SELECT * FROM `user_warns` WHERE `user_id` = :id ]],
-    data = {
-      id = newUser.Id
-    }
+  local warns = StaxDatabase.AsyncQuery([[ SELECT * FROM `user_warns` WHERE `user_id` = :id ]], {
+    id = self.Id
   })
 
-  if not warns.ok then
+  if not warns then
     exports.stax_core:Logger_LogError("Couldn't load user warns", "[PLAYER]: [" .. player.Name .. "]")
     return nil
   end
 
-  return warns.results
+  if not warns.Ok then
+    exports.stax_core:Logger_LogError("Couldn't load user warns", "[PLAYER]: [" .. player.Name .. "]")
+    return nil
+  end
+
+  return warns.Results
 end
 
 --- Creates a new warn record for this user
@@ -227,17 +253,19 @@ end
 ---@param admin number
 ---@return boolean
 function StaxUser:CreateWarn(reason, admin)
-  local insertedWarn = exports.ExternalSQL:AsyncQuery({
-    query = [[ INSERT INTO `user_warns` (`reason`, `admin_id`, `user_id`) VALUES (:reason, :admin, :user) ]],
-    data = {
-      reason = reason,
-      permanent = permanent,
-      admin = admin,
-      user = self.Id
-    }
+
+  local insertedWarn = StaxDatabase.AsyncQuery([[ INSERT INTO `user_warns` (`reason`, `admin_id`, `user_id`) VALUES (:reason, :admin, :user) ]], {
+    reason = reason,
+    permanent = permanent,
+    admin = admin,
+    user = self.Id
   })
 
-  if not insertedWarn.ok then
+  if not insertedWarn then
+    return false
+  end
+
+  if not insertedWarn.Ok then
     return false
   end
 
