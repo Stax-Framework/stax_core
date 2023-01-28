@@ -11,6 +11,12 @@ version '1.0.0'
 author 'Xander1998'
 
 shared_scripts {
+  "@stax_fivem/stax_core/shared/classes/singletons/logger.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
+  "@stax_fivem/stax_core/shared/classes/config.lua",
+  "@stax_fivem/stax_core/shared/classes/locale.lua",
+
   "shared/classes/*.lua",
   "shared/exports/*.lua"
 }
@@ -24,7 +30,9 @@ client_scripts {
 
 server_scripts {
   -- Dependencies
-  "@stax_database/classes/query.lua",
+  "@stax_fivem/stax_database/server/classes/query.lua",
+  "@stax_fivem/stax_core/server/classes/plugin.lua",
+  "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
   
   -- Scripts
   "server/baseevents.lua",
@@ -43,5 +51,6 @@ lua54 'yes'
 --[[ STAX METADATA ]]--
 stax_plugin "stax-core" {
   name = "Stax Core",
-  description = "Stax Framework Core"
+  description = "Stax Framework Core",
+  dependencies = { "stax-fivem" }
 }

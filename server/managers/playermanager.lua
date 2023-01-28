@@ -15,7 +15,7 @@ end
 ---@param player StaxPlayer
 function StaxPlayerManager:RemovePlayer(player)
   if not self.Players[player.Handle] then
-    error("Attempted to remove a StaxPlayer instance from the StaxPlayerManager!")
+    StaxLogger.Error("PlayerManager RemovePlayer", "Couldn't remove player [" .. player.Name .. "]")
     return
   end
 

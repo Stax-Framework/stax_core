@@ -14,7 +14,7 @@ function StaxPluginManager:AddPlugin(resource)
 
       while not StaxPluginManager:ArePluginsMounted(newPlugin.Dependencies) do
         if timestamp < GetGameTimer() then
-          exports.stax_core:Logger_LogError("Could't wait any longer for dependencies", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
+          StaxLogger.Error("Could't wait any longer for dependencies", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
           return
         end
         Citizen.Wait(100)
@@ -105,11 +105,11 @@ end)
 --- Fires when a plugin is mounted
 ---@param plugin StaxPlugin
 AddEventHandler("STAX::Core::Server::PluginMounted", function(plugin)
-  exports.stax_core:Logger_LogSuccess("Plugin Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+  StaxLogger.Success("Plugin Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
 
 --- Fires when a plugin is unmounted
 ---@param plugin StaxPlugin
 AddEventHandler("STAX::Core::Server::PluginUnMounted", function(plugin)
-  exports.stax_core:Logger_LogSuccess("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+  StaxLogger.Success("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
