@@ -16,33 +16,24 @@ shared_scripts {
   "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
   "@stax_fivem/stax_core/shared/classes/config.lua",
   "@stax_fivem/stax_core/shared/classes/locale.lua",
-
-  "shared/classes/*.lua",
-  "shared/exports/*.lua"
+  "@stax_fivem/stax_core/server/classes/user.lua"
 }
 
 client_scripts {
   "client/baseevents.lua",
-  "client/exports/player.lua",
-  "client/exports/character/*.lua",
   "client/client.lua"
 }
 
 server_scripts {
-  -- Dependencies
   "@stax_fivem/stax_database/server/classes/query.lua",
   "@stax_fivem/stax_core/server/classes/plugin.lua",
   "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
-  
-  -- Scripts
-  "server/baseevents.lua",
-  "server/exports/*.lua",
-  "server/classes/player.lua",
-  "server/classes/plugin.lua",
+
   "server/managers/playermanager.lua",
-  "server/managers/servermanager.lua",
   "server/managers/pluginmanager.lua",
-  "server/migrations.lua",
+  "server/managers/servermanager.lua",
+
+  "server/baseevents.lua",
   "server/server.lua"
 }
 
