@@ -14,6 +14,7 @@ shared_scripts {
   "@stax_fivem/stax_core/shared/classes/singletons/logger.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/events.lua",
   "@stax_fivem/stax_core/shared/classes/config.lua",
   "@stax_fivem/stax_core/shared/classes/locale.lua",
   "@stax_fivem/stax_core/server/classes/user.lua"
