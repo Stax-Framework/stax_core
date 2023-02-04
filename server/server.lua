@@ -10,6 +10,7 @@ StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, d
     return
   end
 
+  ---TODO: Convert "license" to config option later
   local identifier = player:GetIdentifier("license")
 
   if not identifier then
