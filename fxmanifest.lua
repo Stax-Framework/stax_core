@@ -43,6 +43,5 @@ lua54 'yes'
 --[[ STAX METADATA ]]--
 stax_plugin "stax-core" {
   name = "Stax Core",
-  description = "Stax Framework Core",
-  dependencies = { "stax-fivem" }
+  description = "Stax Framework Core"
 }
