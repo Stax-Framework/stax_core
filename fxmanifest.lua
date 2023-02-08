@@ -18,7 +18,7 @@ shared_scripts {
   "@stax_fivem/stax_core/shared/classes/config.lua",
   "@stax_fivem/stax_core/shared/classes/locale.lua",
   "@stax_fivem/stax_core/server/classes/user.lua",
-  -- "shared/config.lua",
+  "shared/config.lua",
   "shared/locale.lua"
 }
 
