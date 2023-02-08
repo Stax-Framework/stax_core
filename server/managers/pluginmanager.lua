@@ -92,24 +92,24 @@ end
 
 --- Hooks into the resource start base event
 ---@param resource string
-AddEventHandler("STAX::Core::Server::OnResourceStart", function(resource)
+StaxEvent.CreateEvent("STAX::Core::Server::OnResourceStart", function(resource)
   StaxPluginManager:AddPlugin(resource)
 end)
 
 --- Hooks into the resource stop base event
 ---@param resource string
-AddEventHandler("STAX::Core::Server::OnResourceStop", function(resource)
+StaxEvent.CreateEvent("STAX::Core::Server::OnResourceStop", function(resource)
   StaxPluginManager:RemovePlugin(resource)
 end)
 
 --- Fires when a plugin is mounted
 ---@param plugin StaxPlugin
-AddEventHandler("STAX::Core::Server::PluginMounted", function(plugin)
+StaxEvent.CreateEvent("STAX::Core::Server::PluginMounted", function(plugin)
   StaxLogger.Success("Plugin Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
 
 --- Fires when a plugin is unmounted
 ---@param plugin StaxPlugin
-AddEventHandler("STAX::Core::Server::PluginUnMounted", function(plugin)
+StaxEvent.CreateEvent("STAX::Core::Server::PluginUnMounted", function(plugin)
   StaxLogger.Success("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
