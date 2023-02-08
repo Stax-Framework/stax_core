@@ -14,9 +14,3 @@ else
     Locale = StaxLocale.Class(locale)
   end)
 end
-
-print("________________________________________")
-print("SHOWING ALL OF YOUR LOCALES HERE")
-print("________________________________________")
-print(json.encode(Locale.Storage))
-print("________________________________________")
