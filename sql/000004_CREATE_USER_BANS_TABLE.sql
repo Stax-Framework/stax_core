@@ -1,7 +1,8 @@
 CREATE TABLE IF NOT EXISTS `user_bans` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `reason` TEXT DEFAULT NULL,
-  `permanent` TINYINT DEFAULT 0,
+  `time` JSON DEFAULT NULL,
+  `created_at` JSON NOT NULL,
   `admin_id` INT NOT NULL,
   `user_id` INT NOT NULL,
   FOREIGN KEY (`admin_id`) REFERENCES users(`id`) ON DELETE RESTRICT,
