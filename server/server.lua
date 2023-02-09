@@ -10,15 +10,40 @@ StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, d
     return
   end
 
-  ---TODO: Convert "license" to config option later
-  local identifier = player:GetIdentifier("license")
+  local serverIdentifier = Config:Get("framework.identifier")
+  local identifier = player:GetIdentifier(serverIdentifier)
 
   if not identifier then
-    deferrals.done("We unfortunately couldn't find the required identifier... Please contact support!")
+    deferrals.done("We unfortunately couldn't find the required identifier... PLease reconnect or contact support!")
     return
   end
 
-  local userExists = StaxUser.Exists(identifier)
+  local user = player:LoadUser()
+
+  if not user then
+    deferrals.done("Sorry.. We are unfortunately unable to retrieve a user account for you.. Please reconnect or contact support!")
+    return
+  end
+
+  local bans = player.User.Bans
+
+  if #bans > 0 then
+    deferrals.done("kick here if there is still a ban active!")
+    return
+  end
+
+  local kicks = player.User.Kicks
+
+  if #kicks > 0 then
+    return
+  end
+
+  local warns = player.User.Warns
+
+  if #warns > 0 then
+    return
+  end
+
 
   deferrals.done("Sorry.. We are not allowing connections right now... Please come back another time!")
 end)
