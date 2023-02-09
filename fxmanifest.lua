@@ -32,10 +32,14 @@ server_scripts {
   "@stax_fivem/stax_core/server/classes/plugin.lua",
   "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
   "@stax_fivem/stax_core/shared/classes/datetime.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
+  "@stax_fivem/stax_core/server/classes/player.lua",
+  "@stax_fivem/stax_core/server/classes/user.lua",
 
   "server/managers/playermanager.lua",
   "server/managers/pluginmanager.lua",
   "server/managers/servermanager.lua",
+  "server/managers/queuemanager.lua",
 
   "server/baseevents.lua",
   "server/server.lua"
