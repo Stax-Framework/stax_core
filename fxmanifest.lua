@@ -31,6 +31,7 @@ server_scripts {
   "@stax_fivem/stax_database/server/classes/query.lua",
   "@stax_fivem/stax_core/server/classes/plugin.lua",
   "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
+  "@stax_fivem/stax_core/shared/classes/datetime.lua",
 
   "server/managers/playermanager.lua",
   "server/managers/pluginmanager.lua",
