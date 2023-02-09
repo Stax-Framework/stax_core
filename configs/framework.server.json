@@ -1,8 +1,4 @@
 {
   "identifier": "license",
-  "default_role": "user",
-  "automatic_bans": {
-    "kicks": 3,
-    "warns": 3
-  }
+  "default_role": "user"
 }
