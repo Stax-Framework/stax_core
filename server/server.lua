@@ -2,11 +2,16 @@
 ---@param player StaxPlayer
 ---@param deferrals table
 StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, deferrals)
+  local supportLink = Config:Get("community.support_link")
+
   player = StaxPlayer.Class(player)
 
+  --- Holding user here to check their user data
   deferrals.defer()
 
+  --- Checking if the server is ready to be connected to
   if not StaxServerManager:ServerReady() then
+    deferrals.done(Locale:Get("connecting_server_not_ready"))
     return
   end
 
@@ -14,38 +19,82 @@ StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, d
   local identifier = player:GetIdentifier(serverIdentifier)
 
   if not identifier then
-    deferrals.done("We unfortunately couldn't find the required identifier... PLease reconnect or contact support!")
+    deferrals.done(StaxString.Interpolate(Locale:Get("connecting_identifier_not_found"), { support = supportLink }))
     return
   end
 
   local user = player:LoadUser()
 
   if not user then
-    deferrals.done("Sorry.. We are unfortunately unable to retrieve a user account for you.. Please reconnect or contact support!")
+    deferrals.done(StaxString.Interpolate(Locale:Get("connecting_unable_to_implement_user"), { support = supportLink }))
     return
   end
 
   local bans = player.User.Bans
-
-  if #bans > 0 then
-    deferrals.done("kick here if there is still a ban active!")
-    return
-  end
-
   local kicks = player.User.Kicks
-
-  if #kicks > 0 then
-    return
-  end
-
   local warns = player.User.Warns
 
-  if #warns > 0 then
-    return
+  if #bans > 0 then
+    deferrals.update(Locale:Get("connecting_checking_bans"))
+
+    local now = StaxDateTime.New(true)
+
+    for k, v in pairs(bans) do
+      if v.time ~= null then
+        local banDateTime = StaxDateTime.NewDefaultSet(v.time)
+        local difference = banDateTime:Compare(now)
+
+        if difference.year > 0
+          or different.month > 0
+          or difference.day > 0
+          or difference.hour > 0
+          or difference.minute > 0
+          or difference.second > 0
+        then
+          local banMessage = StaxString.Interpolate(Locale:Get("connecting_banned_message"), {
+            time = json.encode(difference)
+          })
+
+          deferrals.done(banMessage)
+          return
+        end
+      else
+        local banMessage = StaxString.Interpolate(Locale:Get("connecting_banned_message"), {
+          time = "Permanent"
+        })
+
+        deferrals.done(banMessage)
+        return
+      end
+    end
   end
 
+  deferrals.update(Locale:Get("connecting_bans_checked"))
 
-  deferrals.done("Sorry.. We are not allowing connections right now... Please come back another time!")
+  Citizen.Wait(500)
+
+  deferrals.update(StaxString.Interpolate(Locale:Get("connecting_server_stats"), {
+    bans = #bans,
+    kicks = #kicks,
+    warns = #warns
+  }))
+
+  local DisableQueue = Config:Get("queue.disable")
+
+  if not DisableQueue then
+    local CanPlayerJoin = StaxQueueManager:CanPlayerJoin()
+
+    if not CanPlayerJoin then
+      StaxQueueManager:Insert(source, deferrals.update, function()
+        StaxQueueManager:PlayerJoined()
+        deferrals.done("Player left the queue and is now connecting!")
+      end)
+    else
+      StaxQueueManager:PlayerJoined()
+    end
+  end
+
+  deferrals.done("Dev-Comment-Here")
 end)
 
 --- Watches for when the player is joining
@@ -69,5 +118,6 @@ end)
 ---@param reason string
 StaxEvent.CreateEvent("STAX::Core::Server::PlayerDropped", function(player, reason)
   StaxPlayerManager:RemovePlayer(player)
+  StaxQueueManager:PlayerLeft()
   StaxEvent.Fire("STAX::Core::Server::PlayerLeft", player)
 end)
