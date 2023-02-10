@@ -15,11 +15,6 @@ StaxEvent.CreateEvent("entityRemoved", function(handle)
   StaxEvent.Fire("STAX::Core::Server::EntityRemoved", handle)
 end)
 
-
-
-
-
-
 StaxEvent.CreateEvent("onResourceListRefresh", function()
   StaxEvent.Fire("STAX::Core::Server::OnResourceListRefresh")
 end)
