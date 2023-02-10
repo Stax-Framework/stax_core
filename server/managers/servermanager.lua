@@ -1,6 +1,6 @@
 StaxServerManager = {}
 StaxServerManager.ReadyStates = {
-  PluginsLoaded = false
+  PluginsLoaded = true
 }
 
 --- Sets a specific server ready state
