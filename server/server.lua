@@ -78,23 +78,22 @@ StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, d
     kicks = #kicks,
     warns = #warns
   }))
+  -- local DisableQueue = Config:Get("queue.disable")
 
-  local DisableQueue = Config:Get("queue.disable")
+  -- if not DisableQueue then
+  --   local CanPlayerJoin = StaxQueueManager:CanPlayerJoin()
 
-  if not DisableQueue then
-    local CanPlayerJoin = StaxQueueManager:CanPlayerJoin()
+  --   if not CanPlayerJoin then
+  --     StaxQueueManager:Insert(source, deferrals.update, function()
+  --       StaxQueueManager:PlayerJoined()
+  --       deferrals.done("Player left the queue and is now connecting!")
+  --     end)
+  --   else
+  --     StaxQueueManager:PlayerJoined()
+  --   end
+  -- end
 
-    if not CanPlayerJoin then
-      StaxQueueManager:Insert(source, deferrals.update, function()
-        StaxQueueManager:PlayerJoined()
-        deferrals.done("Player left the queue and is now connecting!")
-      end)
-    else
-      StaxQueueManager:PlayerJoined()
-    end
-  end
-
-  deferrals.done("Dev-Comment-Here")
+  deferrals.done("Dev-Stopping-Connections-Here")
 end)
 
 --- Watches for when the player is joining
