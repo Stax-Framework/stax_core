@@ -39,7 +39,7 @@ StaxEvent.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, d
 
     local now = StaxDateTime.New(true)
 
-    for k, v in pairs(bans) do
+    for _, v in pairs(bans) do
       if v.time ~= null then
         local banDateTime = StaxDateTime.NewDefaultSet(v.time)
         local difference = banDateTime:Compare(now)
