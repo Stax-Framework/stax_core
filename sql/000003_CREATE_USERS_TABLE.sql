@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(24) NOT NULL,
-  `identifier` VARCHAR(24) NOT NULL,
+  `identifier` VARCHAR(100) NOT NULL,
   `role` INT NOT NULL DEFAULT 0,
   `allowlisted` TINYINT DEFAULT 0,
   `priority` TINYINT DEFAULT 0,
