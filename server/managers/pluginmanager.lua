@@ -54,8 +54,6 @@ function PluginManager.GetPlugin(key)
   return PluginManager.Plugins[key]
 end
 
-exports("PluginManager_GetPlugin", PluginManager.GetPlugin)
-
 --- Gets the plugins defined key
 ---@param resource string
 ---@return string | nil
@@ -76,8 +74,6 @@ function PluginManager.GetPluginKey(resource)
   return key
 end
 
-exports("PluginManager_GetPluginKey", PluginManager.GetPluginKey)
-
 --- Gets if all defined plugins are mounted
 ---@param plugins table<string>
 ---@return boolean
@@ -97,6 +93,8 @@ function PluginManager.ArePluginsMounted(plugins)
 
   return allMounted
 end
+
+--- EVENTS
 
 --- Hooks into the resource start base event
 ---@param resource string
@@ -121,3 +119,7 @@ end)
 Events.CreateEvent("STAX::Core::Server::PluginUnMounted", function(plugin)
   Logger.Success("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
+
+--- EXPORTS
+exports("PluginManager_GetPlugin", PluginManager.GetPlugin)
+exports("PluginManager_GetPluginKey", PluginManager.GetPluginKey)

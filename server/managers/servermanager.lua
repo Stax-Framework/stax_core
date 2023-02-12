@@ -1,4 +1,4 @@
-local Exports = Stax.Singletons.Exports
+local Logger = Stax.Singletons.Logger
 
 local ServerManager = {
   ReadyStates = {}
@@ -7,10 +7,10 @@ local ServerManager = {
 --- Sets a specific server ready state
 ---@param key string
 ---@param ready boolean
-function ServerManager:SetReadyState(key, ready)
-  if self.ReadyStates[key] ~= nil then
-    self.ReadyStates[key] = ready
-    exports.stax_core:Logger_LogSuccess("[StaxServerManager]: ReadyStateChanged", key .. " - " .. tostring(ready))
+function ServerManager.SetReadyState(key, ready)
+  if ServerManager.ReadyStates[key] ~= nil then
+    ServerManager.ReadyStates[key] = ready
+    Logger.Success("[StaxServerManager]: ReadyStateChanged", key .. " - " .. tostring(ready))
   end
 end
 
@@ -18,14 +18,14 @@ end
 --- Gets a specific server ready state
 ---@param key string
 ---@return boolean
-function ServerManager:GetReadyState(key)
-  return self.ReadyStates[key] or false
+function ServerManager.GetReadyState(key)
+  return ServerManager.ReadyStates[key] or false
 end
 
 --- Checks if all the ready states are true
 ---@return boolean
-function ServerManager:ServerReady()
-  for _, v in pairs(self.ReadyStates) do
+function ServerManager.ServerReady()
+  for _, v in pairs(ServerManager.ReadyStates) do
     if v == false then
       return false
     end
@@ -34,14 +34,6 @@ function ServerManager:ServerReady()
 end
 
 -- EXPORTS
-exports("ServerManager_SetReadyState", function(key, ready)
-  ServerManager:SetReadyState(key, ready)
-end)
-
-exports("ServerManager_GetReadyState", function(key)
-  return ServerManager:GetReadyState(key)
-end)
-
-exports("ServerManager_ServerReady", function()
-  return ServerManager:ServerReady()
-end)
+exports("ServerManager_SetReadyState", ServerManager.SetReadyState)
+exports("ServerManager_GetReadyState", ServerManager.GetReadyState)
+exports("ServerManager_ServerReady", ServerManager.ServerReady)
