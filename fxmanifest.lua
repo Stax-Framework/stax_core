@@ -13,14 +13,13 @@ author 'Xander1998'
 shared_scripts {
   --- IMPORTS
   "@stax_fivem/stax_core/shared/stax.lua",
-  "@stax_fivem/stax_core/shared/classes/config.lua",
-  "@stax_fivem/stax_core/shared/classes/locale.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/class.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/events.lua",
-  "@stax_fivem/stax_core/shared/classes/singletons/exports.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/logger.lua",
   "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
+  "@stax_fivem/stax_core/shared/classes/config.lua",
+  "@stax_fivem/stax_core/shared/classes/locale.lua",
 
   --- SCRIPTS
   "shared/shared.lua"
@@ -32,6 +31,7 @@ client_scripts {
 
 server_scripts {
   --- IMPORTS
+  "@stax_fivem/stax_database/database.lua",
   "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
   "@stax_fivem/stax_core/server/classes/singletons/file.lua",
   "@stax_fivem/stax_core/server/classes/singletons/managers/playermanager.lua",

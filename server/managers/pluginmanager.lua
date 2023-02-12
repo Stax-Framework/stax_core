@@ -1,4 +1,3 @@
-local Exports = Stax.Singletons.Exports
 local Events = Stax.Singletons.Events
 local Logger = Stax.Singletons.Logger
 local Plugin = Stax.Classes.Plugin
@@ -10,13 +9,11 @@ local PluginManager = {
 
 --- Creates new plugin instance and stores it
 ---@param resource string
-function PluginManager:AddPlugin(resource)
-  print("ADDED PLUGIN: " .. resource)
+function PluginManager.AddPlugin(resource)
   local newPlugin = Plugin.New(resource);
 
   local validPlugin = newPlugin:PreInit(function(CallInit)
-    self.Plugins[newPlugin.Key] = newPlugin
-
+    PluginManager.Plugins[newPlugin.Key] = newPlugin
     if newPlugin.Dependencies then
       local timestamp = GetGameTimer() * 10000
 
@@ -39,35 +36,33 @@ end
 
 --- Removes the plugin from the plugin manager
 ---@param resource string
-function PluginManager:RemovePlugin(resource)
-  local key = self:GetPluginKey(resource)
+function PluginManager.RemovePlugin(resource)
+  local key = PluginManager.GetPluginKey(resource)
 
   if not key then
     return
   end
 
-  self.Plugins[key]:UnMount()
-  self.Plugins[key] = nil
+  PluginManager.Plugins[key]:UnMount()
+  PluginManager.Plugins[key] = nil
 end
 
 --- Gets the plugin instance from its name
 ---@param key string
 ---@return Plugin | nil
-function PluginManager:GetPlugin(key)
-  return self.Plugins[key]
+function PluginManager.GetPlugin(key)
+  return PluginManager.Plugins[key]
 end
 
-Exports.Create("PluginManager_GetPlugin", function(key)
-  return PluginManager:GetPlugin(key)
-end)
+exports("PluginManager_GetPlugin", PluginManager.GetPlugin)
 
 --- Gets the plugins defined key
 ---@param resource string
 ---@return string | nil
-function PluginManager:GetPluginKey(resource)
+function PluginManager.GetPluginKey(resource)
   local key = nil
 
-  for k, v in pairs(self.Plugins) do
+  for k, v in pairs(PluginManager.Plugins) do
     if v.ResourceName == resource then
       key = k
       break
@@ -81,17 +76,15 @@ function PluginManager:GetPluginKey(resource)
   return key
 end
 
-Exports.Create("PluginManager_GetPluginKey", function(resource)
-  return PluginManager:GetPluginKey(resource)
-end)
+exports("PluginManager_GetPluginKey", PluginManager.GetPluginKey)
 
 --- Gets if all defined plugins are mounted
 ---@param plugins table<string>
 ---@return boolean
-function PluginManager:ArePluginsMounted(plugins)
+function PluginManager.ArePluginsMounted(plugins)
   local allMounted = true
 
-  for pluginKey, plugin in pairs(self.Plugins) do
+  for pluginKey, plugin in pairs(PluginManager.Plugins) do
     for _, key in pairs(plugins) do
       if pluginKey == key then
         if not plugin.Mounted then
@@ -108,13 +101,13 @@ end
 --- Hooks into the resource start base event
 ---@param resource string
 Events.CreateEvent("STAX::Core::Server::OnResourceStart", function(resource)
-  PluginManager:AddPlugin(resource)
+  PluginManager.AddPlugin(resource)
 end)
 
 --- Hooks into the resource stop base event
 ---@param resource string
 Events.CreateEvent("STAX::Core::Server::OnResourceStop", function(resource)
-  PluginManager:RemovePlugin(resource)
+  PluginManager.RemovePlugin(resource)
 end)
 
 --- Fires when a plugin is mounted

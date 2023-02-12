@@ -34,14 +34,14 @@ function ServerManager:ServerReady()
 end
 
 -- EXPORTS
-Exports.Create("ServerManager_SetReadyState", function(key, ready)
+exports("ServerManager_SetReadyState", function(key, ready)
   ServerManager:SetReadyState(key, ready)
 end)
 
-Exports.Create("ServerManager_GetReadyState", function(key)
+exports("ServerManager_GetReadyState", function(key)
   return ServerManager:GetReadyState(key)
 end)
 
-Exports.Create("ServerManager_ServerReady", function()
+exports("ServerManager_ServerReady", function()
   return ServerManager:ServerReady()
 end)
