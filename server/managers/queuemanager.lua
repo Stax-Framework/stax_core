@@ -1,25 +1,29 @@
-StaxQueueManager = {}
-StaxQueueManager.CurrentPlayerCount = 8
-StaxQueueManager.Queued = {}
+local String = Stax.Singletons.String
+
+---@class QueueManager
+local QueueManager = {
+  CurrentPlayerCount = 0,
+  Queued = {}
+}
 
 --- Inserts a player into the connection queue
 ---@param source number
 ---@param update function
 ---@param connect function
-function StaxQueueManager:Insert(source, update, connect)
+function QueueManager:Insert(source, update, connect)
   table.insert(self.Queued, { source = source, update = update, connect = connect })
 end
 
 --- Removes a player from the connection queue
 ---@param source number
-function StaxQueueManager:Remove(source)
+function QueueManager:Remove(source)
   local slot, player = self:GetPlayerQueue(source)
   table.remove(self.Queued, slot, 1)
   self:UpdatePlayerMessages()
 end
 
 --- Gets the player that is in the queue
-function StaxQueueManager:GetPlayerQueue(source)
+function QueueManager:GetPlayerQueue(source)
   for k, v in pairs(self.Queued) do
     if v.source == source then
       return k, v
@@ -27,8 +31,8 @@ function StaxQueueManager:GetPlayerQueue(source)
   end
 end
 
-function StaxQueueManager:CanPlayerJoin()
-  local maxPlayers = Config:Get("queue.max_server_players")
+function QueueManager:CanPlayerJoin()
+  local maxPlayers = Stax.Config:Get("queue.max_server_players")
 
   if self.CurrentPlayerCount >= maxPlayers then
     return false
@@ -38,10 +42,10 @@ function StaxQueueManager:CanPlayerJoin()
 end
 
 --- Updates the players queue placement message
-function StaxQueueManager:UpdatePlayerMessages()
+function QueueManager:UpdatePlayerMessages()
   if #self.Queued > 0 then
     for placement, v in pairs(self.Queued) do
-      local message = StaxString.Interpolate(Locale:Get("connecting_queue_placement"), {
+      local message = String.Interpolate(Stax.Locale:Get("connecting_queue_placement"), {
         place = placement,
         amount = #self.Queued
       })
@@ -50,12 +54,12 @@ function StaxQueueManager:UpdatePlayerMessages()
   end
 end
 
-function StaxQueueManager:PlayerJoined()
+function QueueManager:PlayerJoined()
   self.CurrentPlayerCount = self.CurrentPlayerCount + 1
   self:UpdatePlayerMessages()
 end
 
-function StaxQueueManager:PlayerLeft()
+function QueueManager:PlayerLeft()
   self.CurrentPlayerCount = self.CurrentPlayerCount - 1
   self:UpdatePlayerMessages()
 end
@@ -64,7 +68,7 @@ Citizen.CreateThread(function()
   while true do
     local playersToRemove = {}
 
-    for _, v in pairs(StaxQueueManager.Queued) do
+    for _, v in pairs(QueueManager.Queued) do
       local name = GetPlayerName(v.source)
 
       if not name then
@@ -75,11 +79,11 @@ Citizen.CreateThread(function()
 
     if #playersToRemove > 0 then
       for a = 1, #playersToRemove do
-        StaxQueueManager:Remove(playersToRemove[a])
+        QueueManager:Remove(playersToRemove[a])
       end
     end
 
-    StaxQueueManager:UpdatePlayerMessages()
+    QueueManager:UpdatePlayerMessages()
 
     Citizen.Wait(5000)
   end

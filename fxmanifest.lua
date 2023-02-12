@@ -11,36 +11,41 @@ version '1.0.0'
 author 'Xander1998'
 
 shared_scripts {
-  "@stax_fivem/stax_core/shared/classes/singletons/logger.lua",
-  "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
-  "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
-  "@stax_fivem/stax_core/shared/classes/singletons/events.lua",
+  --- IMPORTS
+  "@stax_fivem/stax_core/shared/stax.lua",
   "@stax_fivem/stax_core/shared/classes/config.lua",
   "@stax_fivem/stax_core/shared/classes/locale.lua",
-  "@stax_fivem/stax_core/server/classes/user.lua",
-  
+  "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/class.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/events.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/exports.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/logger.lua",
+  "@stax_fivem/stax_core/shared/classes/singletons/table.lua",
+
+  --- SCRIPTS
   "shared/shared.lua"
 }
 
 client_scripts {
-  "client/baseevents.lua",
   "client/client.lua"
 }
 
 server_scripts {
-  "@stax_fivem/stax_database/server/classes/query.lua",
-  "@stax_fivem/stax_core/server/classes/plugin.lua",
+  --- IMPORTS
   "@stax_fivem/stax_core/server/classes/singletons/directory.lua",
-  "@stax_fivem/stax_core/shared/classes/datetime.lua",
-  "@stax_fivem/stax_core/shared/classes/singletons/string.lua",
+  "@stax_fivem/stax_core/server/classes/singletons/file.lua",
+  "@stax_fivem/stax_core/server/classes/singletons/managers/playermanager.lua",
+  "@stax_fivem/stax_core/server/classes/singletons/managers/pluginmanager.lua",
+  "@stax_fivem/stax_core/server/classes/singletons/managers/servermanager.lua",
+  "@stax_fivem/stax_core/server/classes/plugin.lua",
   "@stax_fivem/stax_core/server/classes/player.lua",
   "@stax_fivem/stax_core/server/classes/user.lua",
 
+  --- SCRIPTS
   "server/managers/playermanager.lua",
   "server/managers/pluginmanager.lua",
-  "server/managers/servermanager.lua",
   "server/managers/queuemanager.lua",
-
+  "server/managers/servermanager.lua",
   "server/baseevents.lua",
   "server/server.lua"
 }
