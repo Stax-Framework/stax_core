@@ -1,4 +1,4 @@
-local Events = Stax.Singletons.Events
+local Events = Stax.Events()
 
 Events.CreateEvent("onResourceStart", function(resource)
   Events.Fire("STAX::Core::Server::OnResourceStart", resource)

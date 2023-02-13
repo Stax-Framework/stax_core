@@ -1,4 +1,4 @@
-local Logger = Stax.Singletons.Logger
+local Logger = Stax.Logger()
 
 local ServerManager = {
   ReadyStates = {}

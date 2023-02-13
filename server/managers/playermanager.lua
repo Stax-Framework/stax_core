@@ -1,5 +1,5 @@
-local Logger = Stax.Singletons.Logger
-local Player = Stax.Classes.Player
+local Logger = Stax.Logger()
+local Player = Stax.Player()
 
 ---@class PlayerManager
 ---@field public Players table<number, Player> Table of all player instances
@@ -52,4 +52,3 @@ exports("PlayerManager_AddPlayer", PlayerManager.AddPlayer)
 exports("PlayerManager_RemovePlayer", PlayerManager.RemovePlayer)
 exports("PlayerManager_GetPlayer", PlayerManager.GetPlayer)
 exports("PlayerManager_SetPlayerData", PlayerManager.SetPlayerData)
-exports("PlayerManager_SetPlayerData", PlayerManager.GetPlayerData)

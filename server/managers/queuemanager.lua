@@ -1,4 +1,4 @@
-local String = Stax.Singletons.String
+local String = Stax.String()
 
 ---@class QueueManager
 local QueueManager = {

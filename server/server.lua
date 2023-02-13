@@ -1,7 +1,7 @@
-local Events = Stax.Singletons.Events
-local String = Stax.Singletons.String
-local DateTime = Stax.Classes.DateTime
-local Player = Stax.Classes.Player
+local Events = Stax.Events()
+local String = Stax.String()
+local DateTime = Stax.DateTime()
+local Player = Stax.Player()
 
 --- Watches for players to start connecting to the server
 ---@param player Player

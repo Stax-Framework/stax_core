@@ -1,6 +1,6 @@
-local Events = Stax.Singletons.Events
-local Logger = Stax.Singletons.Logger
-local Plugin = Stax.Classes.Plugin
+local Events = Stax.Events()
+local Logger = Stax.Logger()
+local Plugin = Stax.Plugin()
 
 ---@class PluginManager
 local PluginManager = {
