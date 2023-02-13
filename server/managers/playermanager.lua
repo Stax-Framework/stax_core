@@ -47,7 +47,7 @@ function PlayerManager.SetPlayerData(player, data)
   PlayerManager.Players[player.Handle].Data = data
 end
 
--- EXPORTS
+--- EXPORTS
 exports("PlayerManager_AddPlayer", PlayerManager.AddPlayer)
 exports("PlayerManager_RemovePlayer", PlayerManager.RemovePlayer)
 exports("PlayerManager_GetPlayer", PlayerManager.GetPlayer)
