@@ -2,14 +2,15 @@ local Events = Stax.Events()
 local String = Stax.String()
 local DateTime = Stax.DateTime()
 local Player = Stax.Player()
+local Class = Stax.Class()
 
 --- Watches for players to start connecting to the server
 ---@param player Player
 ---@param deferrals table
 Events.CreateEvent("STAX::Core::Server::PlayerConnecting", function(player, deferrals)
-  local supportLink = Stax.Config:Get("community.support_link")
+  player = Class.Init(player, Player)
 
-  player = Player.Class(player)
+  local supportLink = Stax.Config:Get("community.support_link")
 
   --- Holding user here to check their user data
   deferrals.defer()
