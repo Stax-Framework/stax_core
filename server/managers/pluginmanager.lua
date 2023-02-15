@@ -9,7 +9,7 @@ local PluginManager = {
 
 --- Creates new plugin instance and stores it
 ---@param resource string
-function PluginManager.AddPlugin(resource)
+function PluginManager.Add(resource)
   local newPlugin = Plugin.New(resource);
 
   local validPlugin = newPlugin:PreInit(function(CallInit)
@@ -36,8 +36,8 @@ end
 
 --- Removes the plugin from the plugin manager
 ---@param resource string
-function PluginManager.RemovePlugin(resource)
-  local key = PluginManager.GetPluginKey(resource)
+function PluginManager.Remove(resource)
+  local key = PluginManager.GetKey(resource)
 
   if not key then
     return
@@ -50,14 +50,14 @@ end
 --- Gets the plugin instance from its name
 ---@param key string
 ---@return Plugin | nil
-function PluginManager.GetPlugin(key)
+function PluginManager.Get(key)
   return PluginManager.Plugins[key]
 end
 
 --- Gets the plugins defined key
 ---@param resource string
 ---@return string | nil
-function PluginManager.GetPluginKey(resource)
+function PluginManager.GetKey(resource)
   local key = nil
 
   for k, v in pairs(PluginManager.Plugins) do
@@ -99,13 +99,13 @@ end
 --- Hooks into the resource start base event
 ---@param resource string
 Events.CreateEvent("STAX::Core::Server::OnResourceStart", function(resource)
-  PluginManager.AddPlugin(resource)
+  PluginManager.Add(resource)
 end)
 
 --- Hooks into the resource stop base event
 ---@param resource string
 Events.CreateEvent("STAX::Core::Server::OnResourceStop", function(resource)
-  PluginManager.RemovePlugin(resource)
+  PluginManager.Remove(resource)
 end)
 
 --- Fires when a plugin is mounted
@@ -121,5 +121,5 @@ Events.CreateEvent("STAX::Core::Server::PluginUnMounted", function(plugin)
 end)
 
 --- EXPORTS
-exports("PluginManager_GetPlugin", PluginManager.GetPlugin)
-exports("PluginManager_GetPluginKey", PluginManager.GetPluginKey)
+exports("PluginManager_Get", PluginManager.Get)
+exports("PluginManager_GetKey", PluginManager.GetKey)

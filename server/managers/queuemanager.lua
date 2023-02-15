@@ -10,7 +10,7 @@ local QueueManager = {
 ---@param source number
 ---@param update function
 ---@param connect function
-function QueueManager:Insert(source, update, connect)
+function QueueManager:Add(source, update, connect)
   table.insert(self.Queued, { source = source, update = update, connect = connect })
 end
 
