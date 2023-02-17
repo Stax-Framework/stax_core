@@ -19,7 +19,10 @@ shared_scripts {
   "@stax_libs/[core]/stax_core/shared/classes/singletons/logger.lua",
   "@stax_libs/[core]/stax_core/shared/classes/singletons/table.lua",
   "@stax_libs/[core]/stax_core/shared/classes/config.lua",
-  "@stax_libs/[core]/stax_core/shared/classes/locale.lua"
+  "@stax_libs/[core]/stax_core/shared/classes/locale.lua",
+
+  --- SCRIPTS
+  "shared/stax.lua"
 }
 
 client_scripts {
