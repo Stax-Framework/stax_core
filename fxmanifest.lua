@@ -13,13 +13,13 @@ author 'Xander1998'
 shared_scripts {
   --- IMPORTS
   "@stax_libs/[core]/stax_core/shared/stax.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/singletons/string.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/singletons/class.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/singletons/events.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/singletons/logger.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/singletons/table.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/config.lua",
-  "@stax_lobs/[core]/stax_core/shared/classes/locale.lua"
+  "@stax_libs/[core]/stax_core/shared/classes/singletons/string.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/singletons/class.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/singletons/events.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/singletons/logger.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/singletons/table.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/config.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/locale.lua"
 }
 
 client_scripts {
@@ -30,12 +30,13 @@ server_scripts {
   --- IMPORTS
   "@stax_libs/[core]/stax_database/database.lua",
   "@stax_libs/[core]/stax_core/server/classes/singletons/file.lua",
-  "@stax_libs/[core]/stax_core/server/classes/singletons/file.lua",
+  "@stax_libs/[core]/stax_core/server/classes/singletons/directory.lua",
   "@stax_libs/[core]/stax_core/server/classes/singletons/managers/playermanager.lua",
   "@stax_libs/[core]/stax_core/server/classes/singletons/managers/pluginmanager.lua",
+  "@stax_libs/[core]/stax_core/shared/classes/datetime.lua",
   "@stax_libs/[core]/stax_core/server/classes/plugin.lua",
-  "@stax_libs/[core]/stax_core/server/classes/player.lua",
   "@stax_libs/[core]/stax_core/server/classes/user.lua",
+  "@stax_libs/[core]/stax_core/server/classes/player.lua",
 
   --- SCRIPTS
   "server/managers/playermanager.lua",
