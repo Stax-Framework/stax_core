@@ -18,7 +18,7 @@ end
 ---@param player Player
 function PlayerManager.Remove(player)
   if not self.Players[player.Handle] then
-    Logger.Error("PlayerManager RemovePlayer", "Couldn't remove player [" .. player.Name .. "]")
+    Logger.Error("PlayerManager::Remove", "Couldn't remove player [" .. player.Name .. "]")
     return
   end
 
