@@ -10,7 +10,7 @@ local ServerManager = {
 function ServerManager.SetReadyState(key, ready)
   if ServerManager.ReadyStates[key] ~= nil then
     ServerManager.ReadyStates[key] = ready
-    Logger.Success("[StaxServerManager]: ReadyStateChanged", key .. " - " .. tostring(ready))
+    Logger.Success("ServerManager::SetReadyState::StateChanged", key .. " - " .. tostring(ready))
   end
 end
 
