@@ -19,7 +19,7 @@ function PluginManager.Add(resource)
 
       while not PluginManager:ArePluginsMounted(newPlugin.Dependencies) do
         if timestamp < GetGameTimer() then
-          Logger.Error("Could't wait any longer for dependencies", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
+          Logger.Error("PluginManager::Add::DependencyTimerExpired", "[(" .. newPlugin.ResourceName .. ") " .. newPlugin.Name .. "]")
           return
         end
         Citizen.Wait(100)
@@ -111,13 +111,13 @@ end)
 --- Fires when a plugin is mounted
 ---@param plugin Plugin
 Events.CreateEvent("STAX::Core::Server::PluginMounted", function(plugin)
-  Logger.Success("Plugin Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+  Logger.Success("PluginManager::Mounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
 
 --- Fires when a plugin is unmounted
 ---@param plugin Plugin
 Events.CreateEvent("STAX::Core::Server::PluginUnMounted", function(plugin)
-  Logger.Success("Plugin UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
+  Logger.Success("PluginManager::UnMounted", "[(" .. plugin.ResourceName .. ") " .. plugin.Name .. "]")
 end)
 
 --- EXPORTS
